@@ -1,8 +1,11 @@
-> 基于 https://github.com/Motues/Momo-Backend 进行二次开发的 Cloudflare Worker 版本，做了大量扩展更新。
+> [!WARNING]  
+> 目前仍处于 Beta 测试阶段，欢迎反馈测试结果。
 
 # cwd-comments
 
 Cloudflare Worker 版本基于 Cloudflare Workers + D1 + KV 实现，无需服务器即可部署运行。
+
+> 基于 https://github.com/Motues/Momo-Backend 进行二次开发的 Cloudflare Worker 版本，做了大量扩展更新。
 
 [文档地址](https://cwd-comments.zishu.me)
 
