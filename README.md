@@ -4,6 +4,8 @@
 
 Cloudflare Worker 版本基于 Cloudflare Workers + D1 + KV 实现，无需服务器即可部署运行。
 
+[文档地址](https://cwd-comments.zishu.me)
+
 ## 特性
 
 - ⚡️ **极速响应**：基于 Cloudflare 全球边缘网络
