@@ -84,8 +84,8 @@ export async function sendCommentReplyNotification(
   }
 
   await env.SEND_EMAIL.send({
-    to: [{ email: toEmail }],
-    from: { email: env.CF_FROM_EMAIL },
+    to: [toEmail],
+    from: env.CF_FROM_EMAIL,
     subject: `评论回复 - ${postTitle}`,
     html
   });
