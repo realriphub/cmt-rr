@@ -620,10 +620,6 @@
   font-family: inherit;
 }
 
-.cwd-page-num:hover {
-  background: var(--cwd-bg-hover, #f6f8fa);
-}
-
 .cwd-page-num-active {
   color: #ffffff;
   background: var(--cwd-primary, #0969da);

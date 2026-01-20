@@ -2,7 +2,7 @@
 
 ## 基础信息
 
-- ** **：`https://your-worker-api.workers.dev` 或你的自定义域名
+- **接口地址**：`https://your-worker-api.workers.dev` 或你的自定义域名
 - **数据格式**：JSON
 - **字符编码**：UTF-8
 

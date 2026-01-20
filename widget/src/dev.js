@@ -25,7 +25,8 @@ function loadConfigFromStorage() {
 		if (saved) {
 			return { ...DEFAULT_CONFIG, ...JSON.parse(saved) };
 		}
-	} catch (e) {}
+	} catch (e) {
+	}
 	return DEFAULT_CONFIG;
 }
 
@@ -35,7 +36,8 @@ function loadConfigFromStorage() {
 function saveConfigToStorage(config) {
 	try {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(config));
-	} catch (e) {}
+	} catch (e) {
+	}
 }
 
 /**
@@ -115,6 +117,7 @@ function toggleTheme() {
 	const config = getConfigFromInputs();
 	config.theme = newTheme;
 	saveConfigToStorage(config);
+
 }
 
 /**
@@ -124,7 +127,8 @@ function clearConfig() {
 	try {
 		localStorage.removeItem(STORAGE_KEY);
 		populateInputs(DEFAULT_CONFIG);
-	} catch (e) {}
+	} catch (e) {
+	}
 }
 
 // 将函数挂载到 window 对象，使其在 HTML 中可访问
@@ -134,6 +138,8 @@ window.clearConfig = clearConfig;
 
 // 页面加载完成后自动初始化
 document.addEventListener('DOMContentLoaded', () => {
+
+
 	// 从本地存储加载配置并填充到输入框
 	const savedConfig = loadConfigFromStorage();
 	populateInputs(savedConfig);

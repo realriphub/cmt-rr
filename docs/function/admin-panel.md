@@ -23,13 +23,15 @@
 目前接入了 QQ 邮箱提醒，后续会添加其他邮箱服务。
 
 1. QQ 邮箱
-   - 登录 QQ 邮箱，进入“设置” > “账户”
-   - 开启“POP3/IMAP/SMTP/Exchange/CardDAV/CalDAV服务”，并获取授权码
+   - 登录 QQ 邮箱，进入 `设置 > 账户`
+   - 开启 `POP3/IMAP/SMTP/Exchange/CardDAV/CalDAV 服务`，并获取授权码
    - 在管理后台设置中配置 QQ 邮箱账号和授权码
 
 ## 使用官方管理后台
 
 使用官方提供的管理后台（最新版本）https://cwd-comments.zishu.me。
+
+登陆时填入你的 api 地址、账号和密码。
 
 ## 自部署
 
@@ -81,5 +83,3 @@ cp .env.example .env
 
 - `VITE_API_BASE_URL` 会作为管理后台的默认 API 地址，实际请求地址可以在登录页修改，并持久化到 `localStorage`。
 - `VITE_ADMIN_NAME` 和 `VITE_ADMIN_PASSWORD` 仅用于自动填充登录表单，真正的认证信息以后端环境变量 `ADMIN_NAME`、`ADMIN_PASSWORD` 为准。
-
-
