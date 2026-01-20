@@ -164,9 +164,11 @@ app.put('/admin/settings/email-notify', async (c) => {
 		const body = await c.req.json();
 		const globalEnabled =
 			typeof body.globalEnabled === 'boolean' ? body.globalEnabled : undefined;
+		const smtp = body.smtp && typeof body.smtp === 'object' ? body.smtp : undefined;
 
 		await saveEmailNotificationSettings(c.env, {
-			globalEnabled
+			globalEnabled,
+			smtp
 		});
 
 		return c.json({ message: '保存成功' });

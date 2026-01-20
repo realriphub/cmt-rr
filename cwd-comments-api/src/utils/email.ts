@@ -1,10 +1,16 @@
 import { Bindings } from '../bindings';
+import { createTransport } from 'nodemailer';
 
 export function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 const EMAIL_NOTIFY_GLOBAL_KEY = 'email_notify_enabled';
+const SMTP_HOST_KEY = 'email_smtp_host';
+const SMTP_PORT_KEY = 'email_smtp_port';
+const SMTP_USER_KEY = 'email_smtp_user';
+const SMTP_PASS_KEY = 'email_smtp_pass';
+const SMTP_SECURE_KEY = 'email_smtp_secure';
 
 type MailGatewayPayload = {
   to: string[];
@@ -12,9 +18,57 @@ type MailGatewayPayload = {
   html: string;
 };
 
-async function dispatchMail(env: Bindings, payload: MailGatewayPayload) {
+export type EmailNotificationSettings = {
+  globalEnabled: boolean;
+  smtp?: {
+    host: string;
+    port: number;
+    user: string;
+    pass: string;
+    secure: boolean;
+  };
+};
+
+async function dispatchMail(
+  env: Bindings,
+  payload: MailGatewayPayload,
+  smtpSettings?: EmailNotificationSettings['smtp']
+) {
+  // 1. Try SMTP
+  if (smtpSettings && smtpSettings.user && smtpSettings.pass) {
+    try {
+      console.log('MailDispatch:SMTP:start', { host: smtpSettings.host, user: smtpSettings.user });
+      const transporter = createTransport({
+        host: smtpSettings.host || 'smtp.qq.com',
+        port: smtpSettings.port || 465,
+        secure: smtpSettings.secure ?? true,
+        auth: {
+          user: smtpSettings.user,
+          pass: smtpSettings.pass,
+        },
+      });
+
+      await transporter.sendMail({
+        from: `"评论通知" <${smtpSettings.user}>`,
+        to: payload.to.join(', '),
+        subject: payload.subject,
+        html: payload.html,
+      });
+
+      console.log('MailDispatch:SMTP:success', { to: payload.to });
+      return;
+    } catch (e: any) {
+      console.error('MailDispatch:SMTP:error', {
+        message: e?.message || String(e),
+      });
+      // Fallback to gateway?
+    }
+  }
+
   if (!env.MAIL_GATEWAY_URL) {
-    console.error('MailGateway:missingUrl');
+    if (!smtpSettings?.user) {
+        console.error('MailGateway:missingUrlAndSmtp');
+    }
     return;
   }
 
@@ -40,10 +94,6 @@ async function dispatchMail(env: Bindings, payload: MailGatewayPayload) {
   }
 }
 
-export type EmailNotificationSettings = {
-  globalEnabled: boolean;
-};
-
 function parseEnabled(raw: string | undefined, defaultValue: boolean) {
   if (raw === undefined) return defaultValue;
   return raw === '1';
@@ -56,10 +106,19 @@ export async function loadEmailNotificationSettings(
     'CREATE TABLE IF NOT EXISTS Settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)'
   ).run();
 
+  const keys = [
+    EMAIL_NOTIFY_GLOBAL_KEY,
+    SMTP_HOST_KEY,
+    SMTP_PORT_KEY,
+    SMTP_USER_KEY,
+    SMTP_PASS_KEY,
+    SMTP_SECURE_KEY
+  ];
+
   const { results } = await env.CWD_DB.prepare(
-    'SELECT key, value FROM Settings WHERE key = ?'
+    `SELECT key, value FROM Settings WHERE key IN (${keys.map(() => '?').join(',')})`
   )
-    .bind(EMAIL_NOTIFY_GLOBAL_KEY)
+    .bind(...keys)
     .all<{ key: string; value: string }>();
 
   const map = new Map<string, string>();
@@ -70,9 +129,18 @@ export async function loadEmailNotificationSettings(
   }
 
   const globalEnabled = parseEnabled(map.get(EMAIL_NOTIFY_GLOBAL_KEY), true);
+  
+  const smtp: EmailNotificationSettings['smtp'] = {
+      host: map.get(SMTP_HOST_KEY) || 'smtp.qq.com',
+      port: parseInt(map.get(SMTP_PORT_KEY) || '465', 10),
+      user: map.get(SMTP_USER_KEY) || '',
+      pass: map.get(SMTP_PASS_KEY) || '',
+      secure: map.get(SMTP_SECURE_KEY) !== '0' // Default true
+  };
 
   return {
-    globalEnabled
+    globalEnabled,
+    smtp
   };
 }
 
@@ -80,23 +148,32 @@ export async function saveEmailNotificationSettings(
   env: Bindings,
   settings: {
     globalEnabled?: boolean;
+    smtp?: Partial<EmailNotificationSettings['smtp']>;
   }
 ) {
   await env.CWD_DB.prepare(
     'CREATE TABLE IF NOT EXISTS Settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)'
   ).run();
 
-  const value =
-    typeof settings.globalEnabled === 'boolean'
-      ? settings.globalEnabled
-        ? '1'
-        : '0'
-      : undefined;
+  const entries: { key: string; value: string | undefined }[] = [];
 
-  if (value !== undefined) {
-    await env.CWD_DB.prepare('REPLACE INTO Settings (key, value) VALUES (?, ?)')
-      .bind(EMAIL_NOTIFY_GLOBAL_KEY, value)
-      .run();
+  if (settings.globalEnabled !== undefined) {
+      entries.push({ key: EMAIL_NOTIFY_GLOBAL_KEY, value: settings.globalEnabled ? '1' : '0' });
+  }
+  if (settings.smtp) {
+      if (settings.smtp.host !== undefined) entries.push({ key: SMTP_HOST_KEY, value: settings.smtp.host });
+      if (settings.smtp.port !== undefined) entries.push({ key: SMTP_PORT_KEY, value: String(settings.smtp.port) });
+      if (settings.smtp.user !== undefined) entries.push({ key: SMTP_USER_KEY, value: settings.smtp.user });
+      if (settings.smtp.pass !== undefined) entries.push({ key: SMTP_PASS_KEY, value: settings.smtp.pass });
+      if (settings.smtp.secure !== undefined) entries.push({ key: SMTP_SECURE_KEY, value: settings.smtp.secure ? '1' : '0' });
+  }
+
+  for (const entry of entries) {
+      if (entry.value !== undefined) {
+          await env.CWD_DB.prepare('REPLACE INTO Settings (key, value) VALUES (?, ?)')
+            .bind(entry.key, entry.value)
+            .run();
+      }
   }
 }
 
@@ -110,7 +187,8 @@ export async function sendCommentReplyNotification(
     replyAuthor: string;
     replyContent: string;
     postUrl: string;
-  }
+  },
+  smtpSettings?: EmailNotificationSettings['smtp']
 ) {
   const { toEmail, toName, postTitle, parentComment, replyAuthor, replyContent, postUrl } = params;
 
@@ -170,7 +248,7 @@ export async function sendCommentReplyNotification(
     to: [toEmail],
     subject: `评论回复 - ${postTitle}`,
     html
-  });
+  }, smtpSettings);
 
   console.log('EmailReplyNotification:sent', {
     toEmail
@@ -187,7 +265,8 @@ export async function sendCommentNotification(
     postUrl: string;
     commentAuthor: string;
     commentContent: string;
-  }
+  },
+  smtpSettings?: EmailNotificationSettings['smtp']
 ) {
   const { postTitle, postUrl, commentAuthor, commentContent } = params;
   const toEmail = await getAdminNotifyEmail(env);
@@ -237,7 +316,7 @@ export async function sendCommentNotification(
     to: [toEmail],
     subject: `新评论提醒 - ${postTitle}`,
     html
-  });
+  }, smtpSettings);
 
   console.log('EmailAdminNotification:sent', {
     toEmail
@@ -253,15 +332,7 @@ export async function getAdminNotifyEmail(env: Bindings): Promise<string> {
     .first<{ value: string }>();
   if (row?.value && isValidEmail(row.value)) {
     const cleanEmail = row.value.trim();
-    console.log('EmailAdminNotification:useDbEmail', {
-      email: cleanEmail,
-      originalLength: row.value.length,
-      cleanLength: cleanEmail.length
-    });
     return cleanEmail;
   }
-  console.error('EmailAdminNotification:noAdminEmail', {
-    dbValue: row?.value
-  });
   throw new Error('未配置管理员通知邮箱或格式不正确');
 }

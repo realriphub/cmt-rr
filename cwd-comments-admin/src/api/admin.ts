@@ -42,6 +42,13 @@ export type CommentSettingsResponse = {
 
 export type EmailNotifySettingsResponse = {
 	globalEnabled: boolean;
+	smtp?: {
+		host: string;
+		port: number;
+		user: string;
+		pass: string;
+		secure: boolean;
+	};
 };
 
 export async function loginAdmin(name: string, password: string): Promise<string> {
@@ -81,6 +88,13 @@ export function fetchEmailNotifySettings(): Promise<EmailNotifySettingsResponse>
 
 export function saveEmailNotifySettings(data: {
 	globalEnabled?: boolean;
+	smtp?: {
+		host?: string;
+		port?: number;
+		user?: string;
+		pass?: string;
+		secure?: boolean;
+	};
 }): Promise<{ message: string }> {
 	return put<{ message: string }>('/admin/settings/email-notify', data);
 }

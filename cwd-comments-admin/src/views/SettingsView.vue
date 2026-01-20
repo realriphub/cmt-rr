@@ -40,7 +40,7 @@
       </div>
 
       <div class="card">
-        <h3 class="card-title">通知邮箱设置（测试中，暂未开放）</h3>
+        <h3 class="card-title">通知邮箱设置</h3>
         <div class="form-item">
           <label class="form-label">开启邮件通知</label>
           <label class="switch">
@@ -50,8 +50,47 @@
         </div>
         <div class="form-item">
           <label class="form-label">管理员通知邮箱</label>
-          <input v-model="email" class="form-input" type="email" />
+          <input v-model="email" class="form-input" type="email" placeholder="接收新评论提醒的邮箱" />
         </div>
+
+        <div class="divider"></div>
+        <h4 class="card-subtitle">SMTP 发件配置</h4>
+        
+        <div class="form-item">
+             <label class="form-label">邮件服务商</label>
+             <select v-model="smtpProvider" class="form-input" @change="onProviderChange">
+                <option value="qq">QQ邮箱</option>
+                <option value="custom">自定义SMTP</option>
+             </select>
+        </div>
+        
+        <div v-if="smtpProvider === 'custom'">
+            <div class="form-item">
+               <label class="form-label">SMTP服务器</label>
+               <input v-model="smtpHost" class="form-input" placeholder="smtp.example.com" />
+            </div>
+            <div class="form-item">
+               <label class="form-label">SMTP端口</label>
+               <input v-model="smtpPort" class="form-input" type="number" placeholder="465" />
+            </div>
+            <div class="form-item">
+               <label class="form-label">SSL安全连接</label>
+               <label class="switch">
+                  <input v-model="smtpSecure" type="checkbox" />
+                  <span class="slider" />
+               </label>
+            </div>
+        </div>
+
+        <div class="form-item">
+          <label class="form-label">发件邮箱账号</label>
+          <input v-model="smtpUser" class="form-input" placeholder="例如: 123456@qq.com" />
+        </div>
+        <div class="form-item">
+          <label class="form-label">授权码/密码</label>
+          <input v-model="smtpPass" class="form-input" type="password" placeholder="QQ邮箱请使用授权码" />
+        </div>
+
         <div
           v-if="message && messageType === 'error'"
           class="form-message form-message-error"
@@ -61,7 +100,7 @@
         <div class="card-actions">
           <button class="card-button" :disabled="savingEmail" @click="saveEmail">
             <span v-if="savingEmail">保存中...</span>
-            <span v-else>保存</span>
+            <span v-else>保存配置</span>
           </button>
         </div>
       </div>
@@ -95,6 +134,21 @@ const toastMessage = ref("");
 const toastType = ref<"success" | "error">("success");
 const toastVisible = ref(false);
 
+const smtpProvider = ref('qq');
+const smtpHost = ref('smtp.qq.com');
+const smtpPort = ref(465);
+const smtpUser = ref('');
+const smtpPass = ref('');
+const smtpSecure = ref(true);
+
+function onProviderChange() {
+  if (smtpProvider.value === 'qq') {
+    smtpHost.value = 'smtp.qq.com';
+    smtpPort.value = 465;
+    smtpSecure.value = true;
+  }
+}
+
 function showToast(msg: string, type: "success" | "error" = "success") {
   toastMessage.value = msg;
   toastType.value = type;
@@ -118,6 +172,20 @@ async function load() {
     avatarPrefix.value = commentRes.avatarPrefix || "";
     commentAdminEnabled.value = !!commentRes.adminEnabled;
     emailGlobalEnabled.value = !!emailNotifyRes.globalEnabled;
+    
+    if (emailNotifyRes.smtp) {
+        smtpHost.value = emailNotifyRes.smtp.host;
+        smtpPort.value = emailNotifyRes.smtp.port;
+        smtpUser.value = emailNotifyRes.smtp.user;
+        smtpPass.value = emailNotifyRes.smtp.pass;
+        smtpSecure.value = emailNotifyRes.smtp.secure;
+        
+        if (emailNotifyRes.smtp.host === 'smtp.qq.com') {
+            smtpProvider.value = 'qq';
+        } else {
+            smtpProvider.value = 'custom';
+        }
+    }
   } catch (e: any) {
     message.value = e.message || "加载失败";
     messageType.value = "error";
@@ -139,6 +207,13 @@ async function saveEmail() {
       saveAdminEmail(email.value),
       saveEmailNotifySettings({
         globalEnabled: emailGlobalEnabled.value,
+        smtp: {
+            host: smtpHost.value,
+            port: smtpPort.value,
+            user: smtpUser.value,
+            pass: smtpPass.value,
+            secure: smtpSecure.value
+        }
       }),
     ]);
     showToast(emailRes.message || "保存成功", "success");
@@ -199,6 +274,19 @@ onMounted(() => {
 .card-title {
   margin: 0 0 12px;
   font-size: 15px;
+}
+
+.card-subtitle {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #24292f;
+}
+
+.divider {
+  height: 1px;
+  background-color: #d0d7de;
+  margin: 16px 0;
 }
 
 .form-item {

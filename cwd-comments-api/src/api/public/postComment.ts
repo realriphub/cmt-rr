@@ -167,7 +167,7 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
                   replyAuthor: author,
                   replyContent: content,
                   postUrl: data.post_url,
-                });
+                }, notifySettings.smtp);
                 await c.env.CWD_DB.prepare(
                   "INSERT INTO EmailLog (recipient, type, ip_address, created_at) VALUES (?, ?, ?, ?)"
                 ).bind(parentComment.email, 'user-reply', ip, new Date().toISOString()).run();
@@ -188,7 +188,7 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
                 postUrl: data.post_url,
                 commentAuthor: author,
                 commentContent: content
-              });
+              }, notifySettings.smtp);
               await c.env.CWD_DB.prepare(
                 "INSERT INTO EmailLog (recipient, type, ip_address, created_at) VALUES (?, ?, ?, ?)"
               ).bind('admin', 'admin-notify', ip, new Date().toISOString()).run();
