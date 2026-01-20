@@ -67,8 +67,21 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
   `).run();
 
   // 3. 准备数据
-  const content = checkContent(rawContent);
+  const contentText = checkContent(rawContent);
   const author = checkContent(rawAuthor);
+
+  // Markdown 渲染与 XSS 过滤
+  const html = await marked.parse(rawContent, { async: true });
+  const contentHtml = xss(html, {
+    whiteList: {
+      ...xss.whiteList,
+      code: ['class'],
+      span: ['class', 'style'],
+      pre: ['class'],
+      div: ['class', 'style'],
+      img: ['src', 'alt', 'title', 'width', 'height', 'style']
+    }
+  });
 
   console.log('PostComment:request', {
     postSlug: post_slug,
@@ -99,8 +112,8 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
       `${uaResult.browser.name || ""} ${uaResult.browser.version || ""}`.trim(),
       uaResult.device.model || uaResult.device.type || "Desktop",
       userAgent,
-      content,
-      content,
+      contentText,
+      contentHtml,
       parentId || null,
       "approved" // 或者从环境变量读取默认状态
     ).run();
@@ -140,8 +153,8 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
             const isAdminReply = !!adminEmail && email === adminEmail;
 
             const parentComment = await c.env.CWD_DB.prepare(
-              "SELECT author, email, content_text FROM Comment WHERE id = ?"
-            ).bind(parentId).first<{ author: string, email: string, content_text: string }>();
+              "SELECT author, email, content_html FROM Comment WHERE id = ?"
+            ).bind(parentId).first<{ author: string, email: string, content_html: string }>();
 
             if (parentComment && parentComment.email && parentComment.email !== email) {
               let canSendUserMail = true;
@@ -163,9 +176,9 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
                   toEmail: parentComment.email,
                   toName: parentComment.author,
                   postTitle: data.post_title,
-                  parentComment: parentComment.content_text,
+                  parentComment: parentComment.content_html,
                   replyAuthor: author,
-                  replyContent: content,
+                  replyContent: contentHtml,
                   postUrl: data.post_url,
                 }, notifySettings.smtp);
                 await c.env.CWD_DB.prepare(
@@ -187,7 +200,7 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
                 postTitle: data.post_title,
                 postUrl: data.post_url,
                 commentAuthor: author,
-                commentContent: content
+                commentContent: contentHtml
               }, notifySettings.smtp);
               await c.env.CWD_DB.prepare(
                 "INSERT INTO EmailLog (recipient, type, ip_address, created_at) VALUES (?, ?, ?, ?)"

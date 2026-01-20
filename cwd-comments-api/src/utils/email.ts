@@ -255,11 +255,11 @@ export async function sendCommentReplyNotification(
           </p>
           <div style="margin:0 0 18px 0;padding:14px 16px;border-radius:10px;background:#f3f4f6;border:1px solid #e5e7eb;">
             <div style="font-size:12px;color:#6b7280;margin-bottom:6px;">你之前的评论</div>
-            <div style="font-size:14px;color:#374151;white-space:pre-wrap;">${parentComment}</div>
+            <div style="font-size:14px;color:#374151;">${parentComment}</div>
           </div>
           <div style="margin:0 0 24px 0;padding:14px 16px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;">
             <div style="font-size:12px;color:#1d4ed8;margin-bottom:6px;">最新回复</div>
-            <div style="font-size:14px;color:#1f2937;white-space:pre-wrap;">${replyContent}</div>
+            <div style="font-size:14px;color:#1f2937;">${replyContent}</div>
           </div>
           <div style="text-align:center;margin-bottom:8px;">
             <a href="${postUrl}" style="display:inline-block;padding:10px 22px;border-radius:999px;background:#2563eb;color:#ffffff;font-size:14px;font-weight:500;text-decoration:none;">
@@ -327,7 +327,7 @@ export async function sendCommentNotification(
           </p>
           <div style="margin:0 0 18px 0;padding:14px 16px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;">
             <div style="font-size:12px;color:#6b7280;margin-bottom:6px;">评论内容</div>
-            <div style="font-size:14px;color:#374151;white-space:pre-wrap;">${commentContent}</div>
+            <div style="font-size:14px;color:#374151;">${commentContent}</div>
           </div>
           <div style="margin:0 0 8px 0;">
             <a href="${postUrl}" style="display:inline-block;padding:10px 22px;border-radius:999px;background:#047857;color:#ffffff;font-size:14px;font-weight:500;text-decoration:none;">
