@@ -173,7 +173,13 @@ app.post('/api/verify-admin', verifyAdminKey);
 app.get('/api/config/comments', async (c) => {
 	try {
 		const settings = await loadCommentSettings(c.env);
-		return c.json(settings);
+		const {
+			adminKey,
+			adminKeySet,
+			...publicSettings
+		} = settings as any;
+
+		return c.json(publicSettings);
 	} catch (e: any) {
 		return c.json({ message: e.message || '加载评论配置失败' }, 500);
 	}
