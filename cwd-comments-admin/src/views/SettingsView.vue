@@ -32,7 +32,9 @@
           <input v-model="avatarPrefix" class="form-input" type="text" />
         </div>
         <div class="form-item">
-          <label class="form-label">允许调用的域名（多个域名用逗号分隔，留空则不限制）</label>
+          <label class="form-label"
+            >允许调用的域名（多个域名用逗号分隔，留空则不限制）</label
+          >
           <textarea
             v-model="allowedDomains"
             class="form-input"
@@ -59,49 +61,104 @@
         </div>
         <div class="form-item">
           <label class="form-label">管理员通知邮箱</label>
-          <input v-model="email" class="form-input" type="email" placeholder="接收新评论提醒的邮箱" />
+          <input
+            v-model="email"
+            class="form-input"
+            type="email"
+            placeholder="接收新评论提醒的邮箱"
+          />
         </div>
 
         <div class="divider"></div>
-        <h4 class="card-subtitle">SMTP 发件配置</h4>
-        
+        <h4 class="card-subtitle">1. SMTP 发件配置</h4>
+
         <div class="form-item">
-             <label class="form-label">邮件服务商</label>
-             <select v-model="smtpProvider" class="form-input" @change="onProviderChange">
-                <option value="qq">QQ邮箱</option>
-                <option value="custom">自定义SMTP</option>
-             </select>
+          <label class="form-label">邮件服务商</label>
+          <select v-model="smtpProvider" class="form-input" @change="onProviderChange">
+            <option value="qq">QQ 邮箱</option>
+            <option value="custom">自定义 SMTP</option>
+          </select>
         </div>
-        
+
         <div v-if="smtpProvider === 'custom'">
-            <div class="form-item">
-               <label class="form-label">SMTP服务器</label>
-               <input v-model="smtpHost" class="form-input" placeholder="smtp.example.com" />
-            </div>
-            <div class="form-item">
-               <label class="form-label">SMTP端口</label>
-               <input v-model="smtpPort" class="form-input" type="number" placeholder="465" />
-            </div>
-            <div class="form-item">
-               <label class="form-label">SSL安全连接</label>
-               <label class="switch">
-                  <input v-model="smtpSecure" type="checkbox" />
-                  <span class="slider" />
-               </label>
-            </div>
+          <div class="form-item">
+            <label class="form-label">SMTP 服务器</label>
+            <input v-model="smtpHost" class="form-input" placeholder="smtp.example.com" />
+          </div>
+          <div class="form-item">
+            <label class="form-label">SMTP 端口</label>
+            <input
+              v-model="smtpPort"
+              class="form-input"
+              type="number"
+              placeholder="465"
+            />
+          </div>
+          <div class="form-item">
+            <label class="form-label">SSL 安全连接</label>
+            <label class="switch">
+              <input v-model="smtpSecure" type="checkbox" />
+              <span class="slider" />
+            </label>
+          </div>
         </div>
 
         <div class="form-item">
           <label class="form-label">发件邮箱账号</label>
-          <input v-model="smtpUser" class="form-input" placeholder="例如: 123456@qq.com" />
+          <input
+            v-model="smtpUser"
+            class="form-input"
+            placeholder="例如: 123456@qq.com"
+          />
         </div>
         <div class="form-item">
           <label class="form-label">授权码/密码</label>
-          <input v-model="smtpPass" class="form-input" type="password" placeholder="QQ邮箱请使用授权码" />
+          <input
+            v-model="smtpPass"
+            class="form-input"
+            type="password"
+            placeholder="QQ邮箱请使用授权码"
+          />
           <div v-if="smtpProvider === 'qq'" class="form-hint">
-            注意：QQ邮箱必须使用<a href="https://service.mail.qq.com/detail/0/75" target="_blank">授权码</a>，而非QQ密码。<br/>
-            请登录QQ邮箱网页版，在【设置-账户】中开启 POP3/SMTP 服务并生成授权码。
+            注意：QQ 邮箱必须使用<a
+              href="https://service.mail.qq.com/detail/0/75"
+              target="_blank"
+              >授权码</a
+            >，而非 QQ 密码。<br />
+            请登录 QQ 邮箱网页版，在【设置 - 账户】中开启 POP3/SMTP 服务并生成授权码。
           </div>
+        </div>
+
+        <div class="divider"></div>
+        <h4 class="card-subtitle">2. 邮件模板设置</h4>
+
+        <div class="form-item">
+          <label class="form-label">管理员通知模板 (HTML)</label>
+          <div class="form-hint">
+            可用变量：${commentAuthor} (评论人昵称), ${postTitle} (文章标题), ${postUrl}
+            (文章链接), ${commentContent} (评论内容)
+          </div>
+          <textarea
+            v-model="templateAdmin"
+            class="form-input"
+            rows="6"
+            placeholder="留空则使用默认模板"
+          ></textarea>
+        </div>
+
+        <div class="form-item">
+          <label class="form-label">回复通知模板 (HTML)</label>
+          <div class="form-hint">
+            可用变量：${toName} (接收人昵称), ${replyAuthor} (回复人昵称), ${postTitle}
+            (文章标题), ${postUrl} (文章链接), ${parentComment} (原评论), ${replyContent}
+            (回复内容)
+          </div>
+          <textarea
+            v-model="templateReply"
+            class="form-input"
+            rows="6"
+            placeholder="留空则使用默认模板"
+          ></textarea>
         </div>
 
         <div
@@ -110,10 +167,21 @@
         >
           {{ message }}
         </div>
-        <div class="card-actions" style="justify-content: space-between;">
-           <button class="card-button secondary" :disabled="testingEmail" @click="testEmail">
+        <div class="card-actions" style="justify-content: space-between">
+          <button
+            class="card-button secondary"
+            :disabled="testingEmail"
+            @click="testEmail"
+          >
             <span v-if="testingEmail">发送中...</span>
             <span v-else>发送测试邮件</span>
+          </button>
+          <button
+            class="card-button secondary"
+            type="button"
+            @click="resetTemplatesToDefault"
+          >
+            恢复默认模板
           </button>
           <button class="card-button" :disabled="savingEmail" @click="saveEmail">
             <span v-if="savingEmail">保存中...</span>
@@ -134,8 +202,83 @@ import {
   saveCommentSettings,
   fetchEmailNotifySettings,
   saveEmailNotifySettings,
-  sendTestEmail
+  sendTestEmail,
 } from "../api/admin";
+
+const DEFAULT_REPLY_TEMPLATE = `<div style="background-color:#f4f4f5;padding:24px 0;">
+      <div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:#111827;">
+        <div style="padding:20px 28px;border-bottom:1px solid #e5e7eb;background:linear-gradient(135deg,#2563eb,#4f46e5);">
+          <h1 style="margin:0;font-size:18px;line-height:1.4;color:#f9fafb;">评论回复 - \${postTitle}</h1>
+          <p style="margin:4px 0 0;font-size:12px;color:#e5e7eb;">你在文章下的评论收到了新的回复</p>
+        </div>
+        <div style="padding:24px 28px;">
+          <p style="margin:0 0 8px 0;font-size:14px;color:#374151;">Hi <span style="font-weight:600;">\${toName}</span>，</p>
+          <p style="margin:0 0 16px 0;font-size:14px;color:#4b5563;">
+            <span style="font-weight:600;">\${replyAuthor}</span> 回复了你在
+            <span style="font-weight:600;">《\${postTitle}》</span>
+            中的评论：
+          </p>
+          <div style="margin:0 0 18px 0;padding:14px 16px;border-radius:10px;background:#f3f4f6;border:1px solid #e5e7eb;">
+            <div style="font-size:12px;color:#6b7280;margin-bottom:6px;">你之前的评论</div>
+            <div style="font-size:14px;color:#374151;">\${parentComment}</div>
+          </div>
+          <div style="margin:0 0 24px 0;padding:14px 16px;border-radius:10px;background:#eff6ff;border:1px solid #bfdbfe;">
+            <div style="font-size:12px;color:#1d4ed8;margin-bottom:6px;">最新回复</div>
+            <div style="font-size:14px;color:#1f2937;">\${replyContent}</div>
+          </div>
+          <div style="text-align:center;margin-bottom:8px;">
+            <a href="\${postUrl}" style="display:inline-block;padding:10px 22px;border-radius:999px;background:#2563eb;color:#ffffff;font-size:14px;font-weight:500;text-decoration:none;">
+              打开文章查看完整对话
+            </a>
+          </div>
+          <p style="margin:0;font-size:12px;color:#9ca3af;text-align:center;">
+            如果按钮无法点击，可以将链接复制到浏览器中打开：<br />
+            <span style="word-break:break-all;color:#6b7280;">\${postUrl}</span>
+          </p>
+        </div>
+        <div style="padding:14px 20px;border-top:1px solid #e5e7eb;background:#f9fafb;text-align:center;">
+          <p style="margin:0;font-size:11px;line-height:1.6;color:#9ca3af;">
+            此邮件由系统自动发送，请勿直接回复。
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+const DEFAULT_ADMIN_TEMPLATE = `<div style="background-color:#f4f4f5;padding:24px 0;">
+      <div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:#111827;">
+        <div style="padding:20px 28px;border-bottom:1px solid #e5e7eb;background:linear-gradient(135deg,#0f766e,#059669);">
+          <h1 style="margin:0;font-size:18px;line-height:1.4;color:#f9fafb;">新评论提醒</h1>
+          <p style="margin:4px 0 0;font-size:12px;color:#d1fae5;">你的文章收到了新的评论</p>
+        </div>
+        <div style="padding:24px 28px;">
+          <p style="margin:0 0 10px 0;font-size:14px;color:#374151;">
+            <span style="font-weight:600;">\${commentAuthor}</span> 在文章
+            <span style="font-weight:600;">《\${postTitle}》</span>
+            下发表了新评论：
+          </p>
+          <div style="margin:0 0 18px 0;padding:14px 16px;border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;">
+            <div style="font-size:12px;color:#6b7280;margin-bottom:6px;">评论内容</div>
+            <div style="font-size:14px;color:#374151;">\${commentContent}</div>
+          </div>
+          <div style="margin:0 0 8px 0;">
+            <a href="\${postUrl}" style="display:inline-block;padding:10px 22px;border-radius:999px;background:#047857;color:#ffffff;font-size:14px;font-weight:500;text-decoration:none;">
+              打开后台查看并管理评论
+            </a>
+          </div>
+          <p style="margin:0;font-size:12px;color:#9ca3af;">
+            如果按钮无法点击，可以将链接复制到浏览器中打开：<br />
+            <span style="word-break:break-all;color:#6b7280;">\${postUrl}</span>
+          </p>
+        </div>
+        <div style="padding:14px 20px;border-top:1px solid #e5e7eb;background:#f9fafb;text-align:center;">
+          <p style="margin:0;font-size:11px;line-height:1.6;color:#9ca3af;">
+            此邮件由系统自动发送，如非本人操作可忽略本邮件。
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
 
 const email = ref("");
 const emailGlobalEnabled = ref(true);
@@ -154,16 +297,18 @@ const toastMessage = ref("");
 const toastType = ref<"success" | "error">("success");
 const toastVisible = ref(false);
 
-const smtpProvider = ref('qq');
-const smtpHost = ref('smtp.qq.com');
+const smtpProvider = ref("qq");
+const smtpHost = ref("smtp.qq.com");
 const smtpPort = ref(465);
-const smtpUser = ref('');
-const smtpPass = ref('');
+const smtpUser = ref("");
+const smtpPass = ref("");
 const smtpSecure = ref(true);
+const templateAdmin = ref(DEFAULT_ADMIN_TEMPLATE);
+const templateReply = ref(DEFAULT_REPLY_TEMPLATE);
 
 function onProviderChange() {
-  if (smtpProvider.value === 'qq') {
-    smtpHost.value = 'smtp.qq.com';
+  if (smtpProvider.value === "qq") {
+    smtpHost.value = "smtp.qq.com";
     smtpPort.value = 465;
     smtpSecure.value = true;
   }
@@ -176,6 +321,11 @@ function showToast(msg: string, type: "success" | "error" = "success") {
   window.setTimeout(() => {
     toastVisible.value = false;
   }, 2000);
+}
+
+function resetTemplatesToDefault() {
+  templateAdmin.value = DEFAULT_ADMIN_TEMPLATE;
+  templateReply.value = DEFAULT_REPLY_TEMPLATE;
 }
 
 async function load() {
@@ -191,21 +341,33 @@ async function load() {
     commentAdminBadge.value = commentRes.adminBadge || "博主";
     avatarPrefix.value = commentRes.avatarPrefix || "";
     commentAdminEnabled.value = !!commentRes.adminEnabled;
-    allowedDomains.value = commentRes.allowedDomains ? commentRes.allowedDomains.join(", ") : "";
+    allowedDomains.value = commentRes.allowedDomains
+      ? commentRes.allowedDomains.join(", ")
+      : "";
     emailGlobalEnabled.value = !!emailNotifyRes.globalEnabled;
-    
+
+    if (emailNotifyRes.templates) {
+      templateAdmin.value =
+        emailNotifyRes.templates.admin || DEFAULT_ADMIN_TEMPLATE;
+      templateReply.value =
+        emailNotifyRes.templates.reply || DEFAULT_REPLY_TEMPLATE;
+    } else {
+      templateAdmin.value = DEFAULT_ADMIN_TEMPLATE;
+      templateReply.value = DEFAULT_REPLY_TEMPLATE;
+    }
+
     if (emailNotifyRes.smtp) {
-        smtpHost.value = emailNotifyRes.smtp.host;
-        smtpPort.value = emailNotifyRes.smtp.port;
-        smtpUser.value = emailNotifyRes.smtp.user;
-        smtpPass.value = emailNotifyRes.smtp.pass;
-        smtpSecure.value = emailNotifyRes.smtp.secure;
-        
-        if (emailNotifyRes.smtp.host === 'smtp.qq.com') {
-            smtpProvider.value = 'qq';
-        } else {
-            smtpProvider.value = 'custom';
-        }
+      smtpHost.value = emailNotifyRes.smtp.host;
+      smtpPort.value = emailNotifyRes.smtp.port;
+      smtpUser.value = emailNotifyRes.smtp.user;
+      smtpPass.value = emailNotifyRes.smtp.pass;
+      smtpSecure.value = emailNotifyRes.smtp.secure;
+
+      if (emailNotifyRes.smtp.host === "smtp.qq.com") {
+        smtpProvider.value = "qq";
+      } else {
+        smtpProvider.value = "custom";
+      }
     }
   } catch (e: any) {
     message.value = e.message || "加载失败";
@@ -229,12 +391,16 @@ async function saveEmail() {
       saveEmailNotifySettings({
         globalEnabled: emailGlobalEnabled.value,
         smtp: {
-            host: smtpHost.value,
-            port: smtpPort.value,
-            user: smtpUser.value,
-            pass: smtpPass.value,
-            secure: smtpSecure.value
-        }
+          host: smtpHost.value,
+          port: smtpPort.value,
+          user: smtpUser.value,
+          pass: smtpPass.value,
+          secure: smtpSecure.value,
+        },
+        templates: {
+          reply: templateReply.value,
+          admin: templateAdmin.value,
+        },
       }),
     ]);
     showToast(emailRes.message || "保存成功", "success");
@@ -257,29 +423,33 @@ async function testEmail() {
     messageType.value = "error";
     return;
   }
-  
+
   testingEmail.value = true;
   message.value = "";
   try {
     const res = await sendTestEmail({
-        toEmail: email.value,
-        smtp: {
-            host: smtpHost.value,
-            port: smtpPort.value,
-            user: smtpUser.value,
-            pass: smtpPass.value,
-            secure: smtpSecure.value
-        }
+      toEmail: email.value,
+      smtp: {
+        host: smtpHost.value,
+        port: smtpPort.value,
+        user: smtpUser.value,
+        pass: smtpPass.value,
+        secure: smtpSecure.value,
+      },
     });
     showToast(res.message || "发送成功，请查收邮件", "success");
   } catch (e: any) {
     // 显示详细错误信息
     console.error(e);
     let errorMsg = e.message || "发送失败";
-    
+
     // 针对 QQ 邮箱 535 错误的友好提示
-    if (errorMsg.includes('535') && (errorMsg.includes('Login fail') || errorMsg.includes('authentication failed'))) {
-        errorMsg = "验证失败 (535)：请检查 1. QQ邮箱是否已开启 POP3/SMTP 服务；2. 密码栏是否填写了“授权码”（非QQ密码）。";
+    if (
+      errorMsg.includes("535") &&
+      (errorMsg.includes("Login fail") || errorMsg.includes("authentication failed"))
+    ) {
+      errorMsg =
+        "验证失败 (535)：请检查 1. QQ 邮箱是否已开启 POP3/SMTP 服务；2. 密码栏是否填写了“授权码”（非 QQ 密码）。";
     }
 
     message.value = errorMsg;
@@ -298,7 +468,10 @@ async function saveComment() {
       adminBadge: commentAdminBadge.value,
       avatarPrefix: avatarPrefix.value,
       adminEnabled: commentAdminEnabled.value,
-      allowedDomains: allowedDomains.value.split(/[,，\n]/).map(d => d.trim()).filter(Boolean)
+      allowedDomains: allowedDomains.value
+        .split(/[,，\n]/)
+        .map((d) => d.trim())
+        .filter(Boolean),
     });
     showToast(res.message || "保存成功", "success");
   } catch (e: any) {
@@ -466,13 +639,13 @@ onMounted(() => {
 }
 
 .card-button.secondary {
-    background-color: #f6f8fa;
-    color: #24292f;
-    border: 1px solid #d0d7de;
+  background-color: #f6f8fa;
+  color: #24292f;
+  border: 1px solid #d0d7de;
 }
 .card-button.secondary:hover {
-    background-color: #f3f4f6;
-    border-color: #d0d7de;
+  background-color: #f3f4f6;
+  border-color: #d0d7de;
 }
 
 .card-button:disabled {
@@ -535,10 +708,10 @@ onMounted(() => {
   line-height: 1.5;
 }
 .form-hint a {
-    color: #0969da;
-    text-decoration: none;
+  color: #0969da;
+  text-decoration: none;
 }
 .form-hint a:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 </style>

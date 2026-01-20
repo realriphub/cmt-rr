@@ -51,6 +51,10 @@ export type EmailNotifySettingsResponse = {
 		pass: string;
 		secure: boolean;
 	};
+	templates?: {
+		reply?: string;
+		admin?: string;
+	};
 };
 
 export async function loginAdmin(name: string, password: string): Promise<string> {
@@ -96,6 +100,10 @@ export function saveEmailNotifySettings(data: {
 		user?: string;
 		pass?: string;
 		secure?: boolean;
+	};
+	templates?: {
+		reply?: string;
+		admin?: string;
 	};
 }): Promise<{ message: string }> {
 	return put<{ message: string }>('/admin/settings/email-notify', data);

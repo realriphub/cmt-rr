@@ -162,7 +162,7 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
                   replyAuthor: name,
                   replyContent: contentHtml,
                   postUrl: data.post_url,
-                }, notifySettings.smtp);
+                }, notifySettings.smtp, notifySettings.templates?.reply);
                 console.log('PostComment:mailDispatch:userReply:sent', {
                   toEmail: parentComment.email
                 });
@@ -175,7 +175,7 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
               postUrl: data.post_url,
               commentAuthor: name,
               commentContent: contentHtml
-            }, notifySettings.smtp);
+            }, notifySettings.smtp, notifySettings.templates?.admin);
             console.log('PostComment:mailDispatch:admin:sent');
           }
         } catch (mailError) {
