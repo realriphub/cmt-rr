@@ -34,7 +34,7 @@
 
 		const response = await fetch(`${baseUrl}/api/comments?${params}`);
 		if (!response.ok) {
-			throw new Error(`获取评论失败: ${response.status} ${response.statusText}`);
+			throw new Error(`获取评论失败：${response.status} ${response.statusText}`);
 		}
 		return response.json();
 	}
