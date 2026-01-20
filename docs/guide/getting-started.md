@@ -1,7 +1,7 @@
 > [!WARNING]  
 > 目前仍处于 Beta 测试阶段，欢迎反馈测试结果。
 
-# cwd-comments
+# CWD 评论系统
 
 Cloudflare Worker 版本基于 Cloudflare Workers + D1 + KV 实现，无需服务器即可部署运行的评论组件。
 
@@ -14,7 +14,7 @@ Cloudflare Worker 版本基于 Cloudflare Workers + D1 + KV 实现，无需服�
 - 🎨 **易于集成**：提供完整的 REST API
 
 **开发中：**
-- [ ]📧 **邮件通知**：基于 Cloudflare Workers 发送邮件
+- 📧 **邮件通知**：集成各大邮箱厂商
 
 ## 前置要求
 
