@@ -4,6 +4,7 @@ export default defineConfig({
 	title: 'CWD 评论系统文档',
 	description: '基于 Cloudflare Workers 的轻量级评论系统',
 	lang: 'zh-CN',
+	outline: [2, 3],
 	head: [
 		[
 			'link',

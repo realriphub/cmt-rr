@@ -112,7 +112,7 @@
   "post_slug": "https://example.com/blog/hello-world",
   "post_title": "博客标题，可选",
   "post_url": "https://example.com/blog/hello-world",
-  "author": "张三",
+  "name": "张三",
   "email": "zhangsan@example.com",
   "url": "https://zhangsan.me",
   "content": "很棒的文章！",
@@ -127,7 +127,7 @@
 | `post_slug`  | string | 是   | 文章唯一标识符，应与前端组件初始化时的 `postSlug` 值一致，`window.location.origin + window.location.pathname` |
 | `post_title` | string | 否   | 文章标题，用于邮件通知内容                                                                                    |
 | `post_url`   | string | 否   | 文章 URL，用于邮件通知中的跳转链接                                                                            |
-| `author`     | string | 是   | 评论者昵称                                                                                                    |
+| `name`       | string | 是   | 评论者昵称                                                                                                    |
 | `email`      | string | 是   | 评论者邮箱，需为合法邮箱格式                                                                                  |
 | `url`        | string | 否   | 评论者个人主页或站点地址                                                                                      |
 | `content`    | string | 是   | 评论内容，内部会过滤 `<script>...</script>` 片段                                                              |
@@ -237,18 +237,20 @@
   "adminEmail": "admin@example.com",
   "adminBadge": "博主",
   "avatarPrefix": "https://gravatar.com/avatar",
-  "adminEnabled": true
+  "adminEnabled": true,
+  "allowedDomains": []
 }
 ```
 
 字段说明：
 
-| 字段名         | 类型    | 说明                                             |
-| -------------- | ------- | ------------------------------------------------ |
-| `adminEmail`   | string  | 博主邮箱地址，用于在前端展示“博主”标识          |
-| `adminBadge`   | string  | 博主标识文字，例如 `"博主"`                      |
-| `avatarPrefix` | string  | 头像地址前缀，如 Gravatar 或 Cravatar 镜像地址  |
-| `adminEnabled` | boolean | 是否启用博主标识相关功能                         |
+| 字段名         | 类型    | 说明                                                                 |
+| -------------- | ------- | -------------------------------------------------------------------- |
+| `adminEmail`   | string  | 博主邮箱地址，用于在前端展示“博主”标识，并触发管理员身份验证流程   |
+| `adminBadge`   | string  | 博主标识文字，例如 `"博主"`                                          |
+| `avatarPrefix` | string  | 头像地址前缀，如 Gravatar 或 Cravatar 镜像地址                      |
+| `adminEnabled` | boolean | 是否启用博主标识相关展示（关闭时不显示徽标，但仍可作为管理员邮箱） |
+| `allowedDomains` | Array\<string\> | 允许调用组件的域名列表，留空则不限制                         |
 
 ### 错误响应
 

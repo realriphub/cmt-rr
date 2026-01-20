@@ -31,8 +31,9 @@
           <label class="form-label">头像前缀（默认：https://gravatar.com/avatar）</label>
           <input v-model="avatarPrefix" class="form-input" type="text" />
         </div>
+        <h3 class="card-title">安全设置</h3>
         <div class="form-item">
-          <label class="form-label">允许调用的域名（多个域名用逗号分隔，留空则不限制）</label>
+          <label class="form-label">允许调用的域名（多个域名用逗号分隔，留空则不限制。设置后仅匹配域名可调用前台评论组件。）</label>
           <textarea
             v-model="allowedDomains"
             class="form-input"
