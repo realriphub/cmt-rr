@@ -7,6 +7,14 @@
 	"name": "cwd-comments-api",
 	"main": "src/index.ts",
 	"compatibility_date": "2026-01-03",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
 	"workers_dev": true,
-	"preview_urls": true
+	"preview_urls": true,	
+	"send_email": [
+		{
+			"name": "SEND_EMAIL"
+		}
+	]
 }
