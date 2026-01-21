@@ -76,7 +76,7 @@
         </div>
         <div class="modal-actions">
           <button class="modal-btn secondary" @click="cancelPrefix">
-            直接导入(不添加)
+            直接导入 (不添加)
           </button>
           <button class="modal-btn primary" @click="confirmPrefix">添加并导入</button>
         </div>
@@ -210,7 +210,7 @@ async function handleFileChange(event: Event) {
       }
     } catch (err: any) {
       console.error(err);
-      addLog(`导入失败: ${err.message || "未知错误"}`);
+      addLog(`导入失败：${err.message || "未知错误"}`);
       showToast(err.message || "导入失败，文件格式错误", "error");
       importing.value = false;
     }
@@ -299,11 +299,11 @@ async function executeImport(comments: any[]) {
   addLog("正在上传并导入数据库...");
   try {
     const res = await importComments(comments);
-    addLog(`导入完成: ${res.message || "成功"}`);
+    addLog(`导入完成：${res.message || "成功"}`);
     showToast(res.message || "导入成功", "success");
   } catch (err: any) {
     console.error(err);
-    addLog(`导入失败: ${err.message || "未知错误"}`);
+    addLog(`导入失败：${err.message || "未知错误"}`);
     showToast(err.message || "导入失败", "error");
   } finally {
     importing.value = false;
@@ -444,6 +444,7 @@ async function executeImport(comments: any[]) {
   color: #ffffff;
   font-size: 14px;
   cursor: pointer;
+  min-width: 100px;
 }
 
 .card-button:disabled {

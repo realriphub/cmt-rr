@@ -130,17 +130,17 @@
         >
           ...
         </span>
-        <button
-          v-for="page in visiblePages"
-          v-if="page !== 1 && page !== pagination.total"
-          :key="page"
-          class="pagination-button"
-          :class="{ 'pagination-button-active': page === pagination.page }"
-          :disabled="page === pagination.page"
-          @click="goPage(page)"
-        >
-          {{ page }}
-        </button>
+        <template v-for="page in visiblePages" :key="page">
+          <button
+            v-if="page !== 1 && page !== pagination.total"
+            class="pagination-button"
+            :class="{ 'pagination-button-active': page === pagination.page }"
+            :disabled="page === pagination.page"
+            @click="goPage(page)"
+          >
+            {{ page }}
+          </button>
+        </template>
         <span
           v-if="
             visiblePages.length &&
@@ -186,6 +186,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref, computed } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import {
   CommentItem,
   CommentListResponse,
@@ -195,6 +196,9 @@ import {
   blockIp,
   blockEmail,
 } from "../api/admin";
+
+const route = useRoute();
+const router = useRouter();
 
 const comments = ref<CommentItem[]>([]);
 const pagination = ref<{ page: number; total: number }>({ page: 1, total: 1 });
@@ -269,10 +273,16 @@ async function loadComments(page?: number) {
   }
 }
 
+function updateRoutePage(page: number) {
+  const query = { ...route.query, p: String(page) };
+  router.replace({ query });
+}
+
 async function goPage(page: number) {
   if (page < 1 || page > pagination.value.total) {
     return;
   }
+  updateRoutePage(page);
   await loadComments(page);
 }
 
@@ -286,6 +296,7 @@ function handleJumpPage() {
     return;
   }
   jumpPageInput.value = "";
+  updateRoutePage(page);
   loadComments(page);
 }
 
@@ -341,7 +352,21 @@ async function handleBlockEmail(item: CommentItem) {
 }
 
 onMounted(() => {
-  loadComments();
+  const p = route.query.p;
+  let initialPage = 1;
+  if (typeof p === "string") {
+    const value = Number(p);
+    if (Number.isFinite(value) && value >= 1) {
+      initialPage = Math.floor(value);
+    }
+  } else if (Array.isArray(p) && typeof p[0] === "string") {
+    const value = Number(p[0]);
+    if (Number.isFinite(value) && value >= 1) {
+      initialPage = Math.floor(value);
+    }
+  }
+  updateRoutePage(initialPage);
+  loadComments(initialPage);
 });
 </script>
 

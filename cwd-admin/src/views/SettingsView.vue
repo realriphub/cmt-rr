@@ -701,6 +701,7 @@ onMounted(() => {
   color: #ffffff;
   font-size: 14px;
   cursor: pointer;
+  min-width: 100px;
 }
 
 .card-button.secondary {
