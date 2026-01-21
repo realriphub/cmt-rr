@@ -5,11 +5,11 @@
 
 # Cloudflare Workers Discuss
 
-CWD 评论系统。
+**CWD 评论系统**
 
 是基于 Cloudflare Workers 与全球边缘网络的免服务器、极速安全、即插即用评论系统。
 
-[使用文档](https://cwd-docs.zishu.me)
+数据存储在 Cloudflare D1 数据库中，通过 Worker 与数据库交互。
 
 **评论端**
 ![](https://github.com/user-attachments/assets/6ac091d8-e349-4d40-9d68-485817f63236)

@@ -9,6 +9,8 @@
 
 基于 Cloudflare Workers 与全球边缘网络的免服务器、极速安全、即插即用评论系统。
 
+数据存储在 Cloudflare D1 数据库中，通过 Worker 与数据库交互。
+
 [使用文档](https://cwd-docs.zishu.me)
 
 **评论端**
