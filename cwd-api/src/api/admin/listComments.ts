@@ -9,14 +9,27 @@ export const listComments = async (c: Context<{ Bindings: Bindings }>) => {
 	const limit = 10;
 	const offset = (page - 1) * limit;
 
+	const rawDomain = c.req.query('domain') || '';
+	const domain = rawDomain.trim();
+
+	let whereSql = '';
+	const params: (string | number)[] = [];
+	if (domain) {
+		const pattern = `%://${domain}/%`;
+		whereSql = 'WHERE post_slug LIKE ? OR url LIKE ?';
+		params.push(pattern, pattern);
+	}
+
 	const totalCount = await c.env.CWD_DB.prepare(
-		'SELECT COUNT(*) as count FROM Comment'
-	).first<{ count: number }>();
+		`SELECT COUNT(*) as count FROM Comment ${whereSql}`
+	)
+		.bind(...params)
+		.first<{ count: number }>();
 
 	const { results } = await c.env.CWD_DB.prepare(
-		'SELECT * FROM Comment ORDER BY created DESC LIMIT ? OFFSET ?'
+		`SELECT * FROM Comment ${whereSql} ORDER BY created DESC LIMIT ? OFFSET ?`
 	)
-		.bind(limit, offset)
+		.bind(...params, limit, offset)
 		.all();
 
 	await c.env.CWD_DB.prepare(

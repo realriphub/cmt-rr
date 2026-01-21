@@ -10,15 +10,6 @@
     </div>
 
     <div class="card">
-      <h3 class="card-title">最近 7 天评论数趋势</h3>
-      <div v-if="statsLoading" class="page-hint">加载中...</div>
-      <div v-else-if="statsError" class="page-error">{{ statsError }}</div>
-      <div v-else class="chart-wrapper">
-        <div ref="chartEl" class="chart"></div>
-      </div>
-    </div>
-
-    <div class="card">
       <h3 class="card-title">整体概览</h3>
       <div v-if="statsLoading" class="page-hint">加载中...</div>
       <div v-else-if="statsError" class="page-error">{{ statsError }}</div>
@@ -30,7 +21,9 @@
           </div>
           <div class="stats-item">
             <div class="stats-label">已通过</div>
-            <div class="stats-value stats-value-approved">{{ statsSummary.approved }}</div>
+            <div class="stats-value stats-value-approved">
+              {{ statsSummary.approved }}
+            </div>
           </div>
           <div class="stats-item">
             <div class="stats-label">待审核</div>
@@ -38,9 +31,20 @@
           </div>
           <div class="stats-item">
             <div class="stats-label">已拒绝</div>
-            <div class="stats-value stats-value-rejected">{{ statsSummary.rejected }}</div>
+            <div class="stats-value stats-value-rejected">
+              {{ statsSummary.rejected }}
+            </div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">最近 7 天评论数趋势</h3>
+      <div v-if="statsLoading" class="page-hint">加载中...</div>
+      <div v-else-if="statsError" class="page-error">{{ statsError }}</div>
+      <div v-else class="chart-wrapper">
+        <div ref="chartEl" class="chart"></div>
       </div>
     </div>
 

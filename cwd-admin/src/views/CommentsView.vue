@@ -9,6 +9,12 @@
           <option value="pending">待审核</option>
           <option value="rejected">已拒绝</option>
         </select>
+        <select v-model="domainFilter" class="toolbar-select">
+          <option value="">全部域名</option>
+          <option v-for="item in domainOptions" :key="item" :value="item">
+            {{ item }}
+          </option>
+        </select>
       </div>
       <div class="toolbar-right">
         <button class="toolbar-button" @click="loadComments">刷新</button>
@@ -191,6 +197,7 @@ import {
   CommentItem,
   CommentListResponse,
   fetchComments,
+  fetchCommentStats,
   deleteComment,
   updateCommentStatus,
   blockIp,
@@ -205,7 +212,10 @@ const pagination = ref<{ page: number; total: number }>({ page: 1, total: 1 });
 const loading = ref(false);
 const error = ref("");
 const statusFilter = ref("");
+const domainFilter = ref("");
 const jumpPageInput = ref("");
+
+const domainOptions = ref<string[]>([]);
 
 const filteredComments = computed(() => {
   if (!statusFilter.value) {
@@ -263,7 +273,7 @@ async function loadComments(page?: number) {
   loading.value = true;
   error.value = "";
   try {
-    const res = await fetchComments(targetPage);
+    const res = await fetchComments(targetPage, domainFilter.value || undefined);
     comments.value = res.data;
     pagination.value = { page: res.pagination.page, total: res.pagination.total };
   } catch (e: any) {
@@ -279,6 +289,11 @@ function updateRoutePage(page: number) {
     delete query.p;
   } else {
     query.p = String(page);
+  }
+  if (domainFilter.value) {
+    query.domain = domainFilter.value;
+  } else {
+    delete query.domain;
   }
   router.push({ query });
 }
@@ -370,6 +385,20 @@ onMounted(() => {
       initialPage = Math.floor(value);
     }
   }
+  const d = route.query.domain;
+  if (typeof d === "string" && d.trim()) {
+    domainFilter.value = d.trim();
+  }
+
+  fetchCommentStats()
+    .then((res: CommentListResponse | any) => {
+      const domains = Array.isArray(res.domains) ? res.domains.map((item: any) => item.domain) : [];
+      domainOptions.value = Array.from(new Set(domains));
+    })
+    .catch(() => {
+      domainOptions.value = [];
+    });
+
   loadComments(initialPage);
 });
 </script>

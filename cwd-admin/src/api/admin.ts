@@ -93,8 +93,13 @@ export function logoutAdmin(): void {
 	localStorage.removeItem('cwd_admin_token');
 }
 
-export function fetchComments(page: number): Promise<CommentListResponse> {
-	return get<CommentListResponse>(`/admin/comments/list?page=${page}`);
+export function fetchComments(page: number, domain?: string): Promise<CommentListResponse> {
+	const searchParams = new URLSearchParams();
+	searchParams.set('page', String(page));
+	if (domain) {
+		searchParams.set('domain', domain);
+	}
+	return get<CommentListResponse>(`/admin/comments/list?${searchParams.toString()}`);
 }
 
 export function deleteComment(id: number): Promise<{ message: string }> {
