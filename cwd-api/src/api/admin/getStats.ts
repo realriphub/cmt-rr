@@ -94,12 +94,12 @@ export const getStats = async (c: Context<{ Bindings: Bindings }>) => {
 			.sort((a, b) => b.total - a.total);
 
 		const now = Date.now();
-		const sevenDaysAgo = now - 6 * 24 * 60 * 60 * 1000;
+		const thirtyDaysAgo = now - 29 * 24 * 60 * 60 * 1000;
 
 		const { results: dailyRows } = await c.env.CWD_DB.prepare(
 			"SELECT date(created / 1000, 'unixepoch') as day, COUNT(*) as total FROM Comment WHERE created >= ? GROUP BY day ORDER BY day ASC"
 		)
-			.bind(sevenDaysAgo)
+			.bind(thirtyDaysAgo)
 			.all<{ day: string; total: number }>();
 
 		const dailyMap = new Map<string, number>();
@@ -110,7 +110,7 @@ export const getStats = async (c: Context<{ Bindings: Bindings }>) => {
 		}
 
 		const last7Days: { date: string; total: number }[] = [];
-		for (let i = 6; i >= 0; i--) {
+		for (let i = 29; i >= 0; i--) {
 			const d = new Date(now - i * 24 * 60 * 60 * 1000);
 			const year = d.getUTCFullYear();
 			const month = String(d.getUTCMonth() + 1).padStart(2, '0');

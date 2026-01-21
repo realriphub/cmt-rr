@@ -40,7 +40,7 @@
     </div>
 
     <div class="card">
-      <h3 class="card-title">最近 7 天评论数趋势</h3>
+      <h3 class="card-title">最近 30 天评论数趋势</h3>
       <div v-if="statsLoading" class="page-hint">加载中...</div>
       <div v-else-if="statsError" class="page-error">{{ statsError }}</div>
       <div v-else class="chart-wrapper">

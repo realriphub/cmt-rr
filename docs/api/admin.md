@@ -1085,7 +1085,7 @@ POST /admin/settings/email-test
 GET /admin/stats/comments
 ```
 
-用于管理后台「数据看板」展示评论整体统计、按域名统计以及最近 7 天评论趋势。
+用于管理后台「数据看板」展示评论整体统计、按域名统计以及最近 30 天评论趋势。
 
 - 方法：`GET`
 - 路径：`/admin/stats/comments`
@@ -1147,7 +1147,7 @@ GET /admin/stats/comments
 | `domains[].approved` | number              | 该域名下已通过评论数                  |
 | `domains[].pending`  | number              | 该域名下待审核评论数                  |
 | `domains[].rejected` | number              | 该域名下已拒绝评论数                  |
-| `last7Days`          | Array\<DailyStat\>  | 最近 7 天的每日评论数（按自然日聚合） |
+| `last7Days`          | Array\<DailyStat\>  | 最近 30 天的每日评论数（按自然日聚合） |
 | `last7Days[].date`   | string (YYYY-MM-DD) | 日期，UTC 时间格式化后的自然日        |
 | `last7Days[].total`  | number              | 当日评论总数                          |
 
