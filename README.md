@@ -1,7 +1,9 @@
 > [!WARNING]  
 > ~~目前仍处于 Beta 测试阶段，欢迎反馈测试结果。~~
 > 
-> 目前处于内测阶段，欢迎参与测试。基本功能已完成，后续会不断完善。
+> ~~目前处于内测阶段，欢迎参与测试。~~
+>
+> 基本功能已完成，后续会不断完善。
 
 <img src="https://github.com/anghunk/cwd/blob/main/icon.png?raw=true" width="72" />
 
