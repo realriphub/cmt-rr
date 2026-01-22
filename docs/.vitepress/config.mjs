@@ -11,7 +11,7 @@ export default defineConfig({
 			'link',
 			{
 				rel: 'icon',
-				href: 'https://github.com/anghunk/cwd/blob/main/icon.png?raw=true',
+				href: 'https://cwd.js.org/icon.png',
 			},
 		],
 	],

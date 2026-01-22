@@ -5,7 +5,7 @@
 >
 > 基本功能已完成，后续会不断完善。
 
-<img src="https://github.com/anghunk/cwd/blob/main/icon.png?raw=true" width="72" />
+<img src="https://cwd.js.org/icon.png" width="72" />
 
 # CWD (Cloudflare Workers Discuss)
 
