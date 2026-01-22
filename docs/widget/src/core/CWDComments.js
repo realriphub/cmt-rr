@@ -54,17 +54,23 @@ export class CWDComments {
 	 * @private
 	 */
 	_resolveElement(el) {
+		if (typeof document === 'undefined') {
+			return null;
+		}
+		if (!el) {
+			return null;
+		}
 		if (typeof el === 'string') {
 			const element = document.querySelector(el);
-			if (!element) {
-				throw new Error(`元素未找到：${el}`);
-			}
-			if (!(element instanceof HTMLElement)) {
-				throw new Error(`目标不是 HTMLElement: ${el}`);
+			if (!element || !(element instanceof HTMLElement)) {
+				return null;
 			}
 			return element;
 		}
-		return el;
+		if (el instanceof HTMLElement) {
+			return el;
+		}
+		return null;
 	}
 
 	async _loadServerConfig() {
@@ -98,27 +104,21 @@ export class CWDComments {
 		if (this._mounted) {
 			return;
 		}
-
-		// 创建 Shadow DOM
-		this.shadowRoot = this.hostElement.attachShadow({ mode: 'open' });
-
-		// 注入样式
-		const styleElement = document.createElement('style');
-		if (typeof styles === 'string') {
-			styleElement.textContent = styles;
-		} else if (styles && typeof styles === 'object' && 'default' in styles) {
-			styleElement.textContent = styles.default;
-		}
-		this.shadowRoot.appendChild(styleElement);
-
-		// 创建容器
-		this.mountPoint = document.createElement('div');
-		this.mountPoint.className = 'cwd-comments-container';
-		this.shadowRoot.appendChild(this.mountPoint);
-
-		// 设置主题
-		if (this.config.theme) {
-			this.mountPoint.setAttribute('data-theme', this.config.theme);
+		if (this.hostElement) {
+			this.shadowRoot = this.hostElement.attachShadow({ mode: 'open' });
+			const styleElement = document.createElement('style');
+			if (typeof styles === 'string') {
+				styleElement.textContent = styles;
+			} else if (styles && typeof styles === 'object' && 'default' in styles) {
+				styleElement.textContent = styles.default;
+			}
+			this.shadowRoot.appendChild(styleElement);
+			this.mountPoint = document.createElement('div');
+			this.mountPoint.className = 'cwd-comments-container';
+			this.shadowRoot.appendChild(this.mountPoint);
+			if (this.config.theme) {
+				this.mountPoint.setAttribute('data-theme', this.config.theme);
+			}
 		}
 
 		(async () => {
@@ -139,11 +139,13 @@ export class CWDComments {
 				});
 
 				if (!isAllowed) {
-					this.mountPoint.innerHTML = `
+					if (this.mountPoint) {
+						this.mountPoint.innerHTML = `
             <div style="padding: 20px; text-align: center; color: #666; font-size: 14px; border: 1px solid #eee; border-radius: 8px; background: #f9f9f9;">
               当前域名 (${currentHostname}) 未获得评论组件调用授权
             </div>
           `;
+					}
 					return;
 				}
 			}
@@ -161,14 +163,20 @@ export class CWDComments {
 
 			const api = createApiClient(this.config);
 			this.api = api;
-			this.store = createCommentStore(this.config, api.fetchComments.bind(api), api.submitComment.bind(api));
+			if (this.hostElement && this.mountPoint) {
+				this.store = createCommentStore(
+					this.config,
+					api.fetchComments.bind(api),
+					api.submitComment.bind(api)
+				);
 
-			this.unsubscribe = this.store.store.subscribe((state) => {
-				this._onStateChange(state);
-			});
+				this.unsubscribe = this.store.store.subscribe((state) => {
+					this._onStateChange(state);
+				});
 
-			this._render();
-			this.store.loadComments();
+				this._render();
+				this.store.loadComments();
+			}
 
 			if (this.api && typeof this.api.trackVisit === 'function') {
 				this.api.trackVisit();
