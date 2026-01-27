@@ -332,6 +332,7 @@
 
 .cwd-comment-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -356,6 +357,7 @@
 
 .cwd-comment-author {
   display: inline-flex;
+  flex-wrap: wrap;
   align-items: center;
 }
 
@@ -384,6 +386,7 @@
 
 .cwd-reply-to-author {
   font-style: italic;
+  color: var(--cwd-text-secondary, #6e7781);
 }
 
 .cwd-comment-time {

@@ -9,6 +9,8 @@
   --bg-active: #d0ebff;
   --bg-select: #24292f; /* Header select bg */
   
+  --primary-color: #0969da;
+
   --text-primary: #24292f;
   --text-secondary: #57606a;
   --text-inverse: #ffffff;
@@ -40,6 +42,8 @@
   --bg-hover: #21262d;
   --bg-active: #1f6feb33; /* Semi-transparent blue */
   --bg-select: #161b22;
+
+  --primary-color: #58a6ff;
 
   --text-primary: #c9d1d9;
   --text-secondary: #8b949e;
