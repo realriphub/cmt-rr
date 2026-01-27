@@ -987,3 +987,10 @@
   padding: 0;
   color: #db850d;
 }
+
+/* 兼容其他框架导入的样式 */
+.cwd-comment-content .tk-owo-emotion {
+  display: inline-block;
+  vertical-align: bottom;
+  max-width: 40px;
+}

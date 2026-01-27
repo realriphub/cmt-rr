@@ -52,12 +52,25 @@ export const getComments = async (c: Context<{ Bindings: Bindings }>) => {
         ORDER BY priority DESC, created DESC
       `
     }
-    const { results } = await c.env.CWD_DB.prepare(query).bind(...slugList).all()
+    
+    // 并行获取评论和管理员邮箱
+    // 对 adminEmail 查询进行错误捕获，防止因 Settings 表不存在导致整个接口失败
+    const [commentsResult, adminEmailRow] = await Promise.all([
+       c.env.CWD_DB.prepare(query).bind(...slugList).all(),
+       c.env.CWD_DB.prepare('SELECT value FROM Settings WHERE key = ?')
+         .bind('admin_notify_email')
+         .first<{ value: string }>()
+         .catch(() => null)
+    ]);
+    
+    const results = commentsResult.results;
+    const adminEmail = adminEmailRow?.value || null;
 
     // 2. 批量处理头像并格式化
     const allComments = await Promise.all(results.map(async (row: any) => ({
       ...row,
       avatar: await getCravatar(row.email, avatar_prefix || undefined),
+      isAdmin: adminEmail && row.email === adminEmail,
       replies: []
     })))
 

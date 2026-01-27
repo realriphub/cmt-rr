@@ -39,7 +39,8 @@ export class CommentItem extends Component {
     const { comment, isReply, adminEmail, adminBadge } = this.props;
     const isPinned = typeof comment.priority === 'number' && comment.priority > 1;
     const isReplying = this.props.replyingTo === comment.id;
-    const isAdmin = adminEmail && comment.email === adminEmail;
+    // 使用后端返回的 isAdmin 字段，不再依赖前端邮箱比对
+    const isAdmin = !!comment.isAdmin;
 
     const root = this.createElement('div', {
       className: `cwd-comment-item ${isReply ? 'cwd-comment-reply' : ''}`,
@@ -241,7 +242,7 @@ export class CommentItem extends Component {
             submitting: this.props.submitting,
             currentUser: this.props.currentUser,
             onUpdateUserInfo: this.props.onUpdateUserInfo,
-            adminEmail: this.props.adminEmail,
+            // adminEmail 已移除
             adminBadge: this.props.adminBadge,
             enableCommentLike: this.props.enableCommentLike,
             onReply: this.props.onReply,

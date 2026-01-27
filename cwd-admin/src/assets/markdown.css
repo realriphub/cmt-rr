@@ -1,0 +1,127 @@
+.cell-content-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--cwd-text, #24292f);
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  margin-top: 10px;
+}
+
+.cell-content-text p {
+  margin: 0 0 8px;
+}
+
+.cell-content-text p:last-child {
+  margin-bottom: 0;
+}
+
+.cell-content-text a {
+  color: var(--cwd-primary, #0969da);
+  text-decoration: none;
+}
+
+.cell-content-text a:hover {
+  text-decoration: underline;
+}
+
+.cell-content-text h1,
+.cell-content-text h2,
+.cell-content-text h3,
+.cell-content-text h4,
+.cell-content-text h5,
+.cell-content-text h6 {
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.cell-content-text h1 {
+  font-size: 1.5em;
+}
+
+.cell-content-text h2 {
+  font-size: 1.3em;
+}
+
+.cell-content-text h3 {
+  font-size: 1.1em;
+}
+
+.cell-content-text ul,
+.cell-content-text ol {
+  padding-left: 1.7em;
+  margin: 0 0 8px;
+}
+
+.cell-content-text li+li {
+  margin-top: 4px;
+}
+
+.cell-content-text code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.9em;
+  background: var(--cwd-bg-secondary, #f6f8fa);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+}
+
+.cell-content-text pre {
+  padding: 12px;
+  margin: 12px 0;
+  overflow-x: auto;
+  background: var(--cwd-bg-secondary, #f6f8fa);
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+.cell-content-text pre code {
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+  display: block;
+}
+
+.cell-content-text blockquote {
+  margin: 8px 0;
+  padding: 0 12px;
+  border-left: 4px solid var(--cwd-border, #d0d7de);
+  color: var(--cwd-text-secondary, #6e7781);
+}
+
+.cell-content-text hr {
+  border: 0;
+  border-top: 1px solid var(--cwd-border-light, #eaeef2);
+  margin: 16px 0;
+}
+
+.cell-content-text table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  font-size: 13px;
+  margin: 12px 0;
+}
+
+.cell-content-text th,
+.cell-content-text td {
+  border: 1px solid var(--cwd-border, #d0d7de);
+  padding: 6px 12px;
+  text-align: left;
+}
+
+.cell-content-text th {
+  background: var(--cwd-bg-secondary, #f6f8fa);
+}
+
+.cell-content-text img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 兼容其他框架导入的样式 */
+.cell-content-text .tk-owo-emotion {
+  display: inline-block;
+  vertical-align: bottom;
+  max-width: 40px;
+}

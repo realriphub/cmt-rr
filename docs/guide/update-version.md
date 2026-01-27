@@ -1,6 +1,6 @@
 # 更新部署
 
-重新拉取 GitHub 项目代码
+重新拉取 GitHub 项目代码。
 
 ## 后端更新
 
@@ -15,6 +15,8 @@ npm run deploy
 重新部署到 Cloudflare Workers.
 
 ## 前端更新
+
+如果你的管理后台项目，是通过 GitHub 仓库部署到 Cloudflare Pages，不需要手动更新，只用拉取官方仓库代码，重新推送即可触发重新部署（无需手动）。
 
 ### 管理后台
 
@@ -35,4 +37,4 @@ npm run build
 
 如果使用官方评论端 js `https://cwd.js.org/cwd.js`，不需要更新。
 
-如果你想自己托管，请下载仓库 `/cwd-admin/public` 中最新的 `cwd.js` 文件。
+如果你想自行托管，请使用打包命令，对仓库 `@docs/widget` 文件夹进行构建，然后把 `dist` 文件夹中的最新的 `cwd.js` 文件上传到你托管的地方。

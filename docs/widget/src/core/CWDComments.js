@@ -367,7 +367,7 @@ export class CWDComments {
 				submitting: state.submitting,
 				currentUser: state.form,
 				onUpdateUserInfo: (field, value) => this.store.updateFormField(field, value),
-				adminEmail: this.config.adminEmail,
+				// adminEmail 已移除，前端展示改用 isAdmin 字段
 				adminBadge: this.config.adminBadge,
 				enableCommentLike: this.config.enableCommentLike !== false,
 				onRetry: () => this.store.loadComments(),

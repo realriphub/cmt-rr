@@ -97,7 +97,7 @@ export class CommentList extends Component {
           submitting: this.props.submitting,
           currentUser: this.props.currentUser,
           onUpdateUserInfo: this.props.onUpdateUserInfo,
-          adminEmail: this.props.adminEmail,
+          // adminEmail 已移除，改用 comment.isAdmin 字段
           adminBadge: this.props.adminBadge,
           enableCommentLike: this.props.enableCommentLike,
           onReply: (commentId) => this.handleReply(commentId),

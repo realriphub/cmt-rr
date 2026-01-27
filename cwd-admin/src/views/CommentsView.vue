@@ -58,7 +58,7 @@
             </div>
           </div>
           <div class="table-cell table-cell-content">
-            <div class="cell-content-text">{{ item.contentText }}</div>
+            <div class="cell-content-text" v-html="item.contentHtml"></div>
           </div>
           <div class="table-cell table-cell-path">
             <a
@@ -81,9 +81,17 @@
               >
                 置顶
               </span>
-              <span class="cell-status cell-likes-number" v-if="item.likes !== 0"
+              <span class="cell-status cell-likes-number" v-if="item.likes !== 0">
+                <svg
+                  style="width: 13px"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  fill="currentColor"
                 >
-                <svg style="width:13px;" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M2 21h4V9H2v12zm20-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L13 1 7.59 6.41C7.22 6.78 7 7.3 7 7.83V19c0 1.1.9 2 2 2h8c.78 0 1.48-.45 1.82-1.11l3.02-7.05c.11-.23.16-.48.16-.74v-2z"></path></svg>
+                  <path
+                    d="M2 21h4V9H2v12zm20-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L13 1 7.59 6.41C7.22 6.78 7 7.3 7 7.83V19c0 1.1.9 2 2 2h8c.78 0 1.48-.45 1.82-1.11l3.02-7.05c.11-.23.16-.48.16-.74v-2z"
+                  ></path>
+                </svg>
                 {{
                   typeof item.likes === "number" &&
                   Number.isFinite(item.likes) &&
@@ -257,6 +265,7 @@
 </template>
 
 <script setup lang="ts">
+import "../assets/markdown.css";
 import { onMounted, ref, computed, watch, inject } from "vue";
 import type { Ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
