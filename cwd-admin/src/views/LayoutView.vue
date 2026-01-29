@@ -136,7 +136,7 @@
             :class="{ active: isRouteActive('data') }"
             @click="goData"
           >
-            数据迁移
+            数据管理
           </li>
         </ul>
       </nav>

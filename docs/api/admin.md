@@ -25,7 +25,7 @@ Token 通过登录接口获取，有效期为 48 小时。
 - **加入 IP 黑名单** `POST /admin/comments/block-ip` - 将指定 IP 加入评论黑名单
 - **加入邮箱黑名单** `POST /admin/comments/block-email` - 将指定邮箱加入评论黑名单
 
-### [数据迁移相关](./admin/data-migration.md)
+### [数据管理相关](./admin/data-migration.md)
 
 - **导出所有评论数据** `GET /admin/comments/export` - 导出所有评论数据
 - **导入评论数据** `POST /admin/comments/import` - 导入评论数据

@@ -58,7 +58,7 @@ const routes: RouteRecordRaw[] = [
 				name: 'data',
 				component: DataView,
 				meta: {
-					title: '数据迁移',
+					title: '数据管理',
 				},
 			},
 		],

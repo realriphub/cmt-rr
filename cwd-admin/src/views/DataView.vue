@@ -10,7 +10,7 @@
     </div>
 
     <div class="card">
-      <h3 class="card-title">数据导出</h3>
+      <h3 class="card-title">评论数据导出</h3>
       <p class="card-desc">将所有评论数据导出为 JSON 格式。</p>
       <div class="card-actions">
         <button class="card-button" :disabled="exporting" @click="handleExport">
@@ -21,7 +21,7 @@
     </div>
 
     <div class="card">
-      <h3 class="card-title">数据导入</h3>
+      <h3 class="card-title">评论数据导入</h3>
       <p class="card-desc">从其他评论系统导入数据，请选择来源并上传 JSON 文件。</p>
 
       <div class="form-group">
