@@ -45,7 +45,3 @@ features:
     details: 提供完整 REST API 与 SDK，一行代码嵌入，适配 Vue、React 等任意框架
 ---
 
-<style>
-.extra-class{max-width:1200px;margin:2em auto 0;padding:0 24px;}
-.image-src{max-width:200px !important;}
-</style>

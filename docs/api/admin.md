@@ -27,8 +27,14 @@ Token 通过登录接口获取，有效期为 48 小时。
 
 ### [数据管理相关](./admin/data-migration.md)
 
-- **导出所有评论数据** `GET /admin/comments/export` - 导出所有评论数据
-- **导入评论数据** `POST /admin/comments/import` - 导入评论数据
+- **导出所有评论数据** `GET /admin/comments/export` - 导出所有评论数据（仅评论）
+- **导入评论数据** `POST /admin/comments/import` - 导入评论数据，支持 Twikoo / Artalk / CWD JSON
+- **导出配置数据** `GET /admin/export/config` - 导出系统配置（Settings 表）
+- **导入配置数据** `POST /admin/import/config` - 导入系统配置
+- **导出访问 / 点赞统计数据** `GET /admin/export/stats` - 导出访问量、按日统计和点赞明细
+- **导入访问 / 点赞统计数据** `POST /admin/import/stats` - 导入访问和点赞统计
+- **全量导出（备份）** `GET /admin/export/backup` - 一次性导出评论 + 配置 + 统计数据
+- **全量导入（恢复）** `POST /admin/import/backup` - 从备份文件恢复全部数据
 
 ### [评论设置相关](./admin/settings.md)
 
