@@ -56,6 +56,12 @@
       </div>
     </div>
 
+    <div class="card">
+      <h3 class="card-title">其他</h3>
+      <p class="card-desc">访问明细、后台配置等数据导入导出正在开发中...</p>
+      
+    </div>
+
     <!-- 前缀确认弹窗 -->
     <div v-if="showPrefixModal" class="modal-overlay">
       <div class="modal">
