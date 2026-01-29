@@ -47,4 +47,5 @@ features:
 
 <style>
 .extra-class{max-width:1200px;margin:2em auto 0;padding:0 24px;}
+.image-src{max-width:200px !important;}
 </style>
