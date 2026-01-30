@@ -25,7 +25,7 @@ async function request<T>(method: HttpMethod, path: string, body?: unknown): Pro
 	const res = await fetch(`${apiBaseUrl}${path}`, {
 		method,
 		headers,
-		body: body !== undefined ? JSON.stringify(body) : undefined
+		body: body !== undefined ? JSON.stringify(body) : undefined,
 	});
 	let data: any = null;
 	try {

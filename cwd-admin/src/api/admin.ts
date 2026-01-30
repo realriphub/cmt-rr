@@ -174,7 +174,7 @@ export function updateComment(data: {
 		postSlug: data.postSlug,
 		content: data.contentText,
 		status: data.status,
-		priority: data.priority
+		priority: data.priority,
 	});
 }
 
@@ -323,10 +323,7 @@ export function fetchFeatureSettings(): Promise<FeatureSettingsResponse> {
 	return get<FeatureSettingsResponse>('/admin/settings/features');
 }
 
-export function saveFeatureSettings(data: {
-	enableCommentLike?: boolean;
-	enableArticleLike?: boolean;
-}): Promise<{ message: string }> {
+export function saveFeatureSettings(data: { enableCommentLike?: boolean; enableArticleLike?: boolean }): Promise<{ message: string }> {
 	return put<{ message: string }>('/admin/settings/features', data);
 }
 
@@ -340,11 +337,7 @@ export function fetchTelegramSettings(): Promise<TelegramSettingsResponse> {
 	return get<TelegramSettingsResponse>('/admin/settings/telegram');
 }
 
-export function saveTelegramSettings(data: {
-	botToken?: string;
-	chatId?: string;
-	notifyEnabled?: boolean;
-}): Promise<{ message: string }> {
+export function saveTelegramSettings(data: { botToken?: string; chatId?: string; notifyEnabled?: boolean }): Promise<{ message: string }> {
 	return put<{ message: string }>('/admin/settings/telegram', data);
 }
 
