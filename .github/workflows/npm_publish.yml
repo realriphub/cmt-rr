@@ -2,8 +2,9 @@ name: Publish npm
 
 on:
   push:
-    tags:
-      - "widget-v*"
+    branches:
+      - main
+      - master
 
 jobs:
   publish:
@@ -22,15 +23,46 @@ jobs:
           node-version: "20"
           registry-url: "https://registry.npmjs.org"
 
+      - name: Get local package info
+        id: pkg
+        working-directory: docs/widget
+        run: |
+          name=$(node -p "require('./package.json').name")
+          version=$(node -p "require('./package.json').version")
+          echo "name=$name" >> $GITHUB_OUTPUT
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+      - name: Get npm published version
+        id: npm
+        run: |
+          PUBLISHED_VERSION=$(npm view "${{ steps.pkg.outputs.name }}" version || echo "none")
+          echo "version=$PUBLISHED_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Decide whether to publish
+        id: decision
+        run: |
+          echo "local=${{ steps.pkg.outputs.version }}"
+          echo "remote=${{ steps.npm.outputs.version }}"
+          if [ "${{ steps.npm.outputs.version }}" = "none" ]; then
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          elif [ "${{ steps.pkg.outputs.version }}" != "${{ steps.npm.outputs.version }}" ]; then
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Install dependencies
+        if: steps.decision.outputs.should_publish == 'true'
         working-directory: docs/widget
         run: npm ci
 
       - name: Build widget
+        if: steps.decision.outputs.should_publish == 'true'
         working-directory: docs/widget
         run: npm run build
 
       - name: Publish to npm
+        if: steps.decision.outputs.should_publish == 'true'
         working-directory: docs/widget
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
