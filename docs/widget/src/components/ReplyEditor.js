@@ -75,6 +75,7 @@ export class ReplyEditor extends Component {
             placeholder: '支持 Markdown 格式',
             disabled: this.props.submitting,
             onInput: (e) => this.handleInput(e),
+            onKeydown: (e) => this.handleTextareaKeydown(e),
           },
         }),
 
@@ -183,6 +184,18 @@ export class ReplyEditor extends Component {
     if (this.props.submitting !== prevProps?.submitting) {
       this.render();
       return;
+    }
+  }
+
+  handleTextareaKeydown(e) {
+    if (
+      e.key === '/' &&
+      !e.ctrlKey &&
+      !e.metaKey &&
+      !e.altKey &&
+      !e.shiftKey
+    ) {
+      e.stopPropagation();
     }
   }
 

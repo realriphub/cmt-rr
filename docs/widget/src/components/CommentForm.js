@@ -106,6 +106,7 @@ export class CommentForm extends Component {
 										rows: 4,
 										disabled: submitting,
 										onInput: (e) => this.handleFieldChange('content', e.target.value),
+										onKeydown: (e) => this.handleContentKeydown(e),
 									},
 								}),
 								...(formErrors.content ? [this.createTextElement('span', formErrors.content, 'cwd-error-text')] : []),
@@ -342,6 +343,18 @@ export class CommentForm extends Component {
 			if (field === 'content' && this.state.showPreview) {
 				this.updatePreviewContent(value);
 			}
+		}
+	}
+
+	handleContentKeydown(e) {
+		if (
+			e.key === '/' &&
+			!e.ctrlKey &&
+			!e.metaKey &&
+			!e.altKey &&
+			!e.shiftKey
+		) {
+			e.stopPropagation();
 		}
 	}
 
