@@ -10,429 +10,472 @@
     </div>
     <div v-if="loading" class="page-hint">加载中...</div>
     <div v-else>
-      <div class="card">
-        <div class="card-header" @click="toggleCard('comment')">
-          <div class="card-title">评论显示配置</div>
-          <div class="card-icon" :class="{ expanded: cardsExpanded.comment }">▼</div>
-        </div>
-        <transition name="collapse">
-          <div v-show="cardsExpanded.comment" class="card-body">
-            <div class="form-item">
-              <label class="form-label">管理员邮箱</label>
-              <input v-model="commentAdminEmail" class="form-input" type="email" />
-            </div>
-            <div class="form-item">
-              <label class="form-label">博主标签文字（留空使用默认图标）</label>
-              <input v-model="commentAdminBadge" class="form-input" type="text" />
-            </div>
-            <div class="form-item">
-              <label class="form-label">是否开启博主标签显示</label>
-              <label class="switch">
-                <input v-model="commentAdminEnabled" type="checkbox" />
-                <span class="slider" />
-              </label>
-            </div>
-            <div class="form-item">
-              <label class="form-label"
-                >头像前缀（默认：https://gravatar.com/avatar）</label
-              >
-              <input v-model="avatarPrefix" class="form-input" type="text" />
-            </div>
-            <h3 class="card-title">安全设置</h3>
-            <div class="form-item">
-              <label class="form-label">新评论是否审核后再显示</label>
-              <label class="switch">
-                <input v-model="requireReview" type="checkbox" />
-                <span class="slider" />
-              </label>
-            </div>
-            <div class="form-item">
-              <label class="form-label">
-                管理员评论密钥（设置后前台使用管理员邮箱评论需输入此密钥。）
-              </label>
-
-              <input
-                v-model="commentAdminKey"
-                class="form-input"
-                placeholder="输入密钥以设置或修改"
-                autocomplete="new-password"
-              />
-            </div>
-            <div class="form-item">
-              <label class="form-label">
-                允许调用的域名（设置后仅匹配域名可调用前台评论组件，留空则不限制。使用空格或者逗号进行分割。）
-              </label>
-              <div class="tag-input">
-                <div class="tag-input-inner">
-                  <span
-                    v-for="domain in allowedDomainTags"
-                    :key="domain"
-                    class="tag-input-tag"
+      <div class="settings-tabs">
+        <button
+          type="button"
+          class="settings-tab"
+          :class="{ 'settings-tab-active': activeTab === 'comment' }"
+          @click="activeTab = 'comment'"
+        >
+          评论与安全
+        </button>
+        <button
+          type="button"
+          class="settings-tab"
+          :class="{ 'settings-tab-active': activeTab === 'feature' }"
+          @click="activeTab = 'feature'"
+        >
+          功能开关
+        </button>
+        <button
+          type="button"
+          class="settings-tab"
+          :class="{ 'settings-tab-active': activeTab === 'display' }"
+          @click="activeTab = 'display'"
+        >
+          后台显示
+        </button>
+        <button
+          type="button"
+          class="settings-tab"
+          :class="{ 'settings-tab-active': activeTab === 'notify' }"
+          @click="activeTab = 'notify'"
+        >
+          通知设置
+        </button>
+      </div>
+      <transition name="tab-fade" mode="out-in">
+        <div :key="activeTab">
+          <template v-if="activeTab === 'comment'">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">评论显示配置</div>
+              </div>
+              <div class="card-body">
+                <div class="form-item">
+                  <label class="form-label">管理员邮箱</label>
+                  <input v-model="commentAdminEmail" class="form-input" type="email" />
+                </div>
+                <div class="form-item">
+                  <label class="form-label">博主标签文字（留空使用默认图标）</label>
+                  <input v-model="commentAdminBadge" class="form-input" type="text" />
+                </div>
+                <div class="form-item">
+                  <label class="form-label">是否开启博主标签显示</label>
+                  <label class="switch">
+                    <input v-model="commentAdminEnabled" type="checkbox" />
+                    <span class="slider" />
+                  </label>
+                </div>
+                <div class="form-item">
+                  <label class="form-label"
+                    >头像前缀（默认：https://gravatar.com/avatar）</label
                   >
-                    <span class="tag-input-tag-text">{{ domain }}</span>
-                    <button
-                      type="button"
-                      class="tag-input-tag-remove"
-                      @click="removeAllowedDomain(domain)"
-                    >
-                      <PhTrash :size="14" />
-                    </button>
-                  </span>
+                  <input v-model="avatarPrefix" class="form-input" type="text" />
+                </div>
+                <h3 class="card-title">安全设置</h3>
+                <div class="form-item">
+                  <label class="form-label">新评论是否审核后再显示</label>
+                  <label class="switch">
+                    <input v-model="requireReview" type="checkbox" />
+                    <span class="slider" />
+                  </label>
+                </div>
+                <div class="form-item">
+                  <label class="form-label">
+                    管理员评论密钥（设置后前台使用管理员邮箱评论需输入此密钥。）
+                  </label>
+
                   <input
-                    v-model="allowedDomainInput"
-                    class="tag-input-input"
-                    @keyup="handleAllowedDomainKeyup"
-                    @blur="handleAllowedDomainBlur"
+                    v-model="commentAdminKey"
+                    class="form-input"
+                    placeholder="输入密钥以设置或修改"
+                    autocomplete="new-password"
                   />
                 </div>
-              </div>
-            </div>
-            <div class="form-item">
-              <label class="form-label">
-                IP 黑名单（多个 IP 用逗号或换行分隔，留空则不限制）
-              </label>
-              <div class="tag-input">
-                <div class="tag-input-inner">
-                  <span v-for="ip in blockedIpTags" :key="ip" class="tag-input-tag">
-                    <span class="tag-input-tag-text">{{ ip }}</span>
-                    <button
-                      type="button"
-                      class="tag-input-tag-remove"
-                      @click="removeBlockedIp(ip)"
-                    >
-                      <PhTrash :size="14" />
-                    </button>
-                  </span>
-                  <input
-                    v-model="blockedIpInput"
-                    class="tag-input-input"
-                    @keyup="handleBlockedIpKeyup"
-                    @blur="handleBlockedIpBlur"
-                  />
+                <div class="form-item">
+                  <label class="form-label">
+                    允许调用的域名（设置后仅匹配域名可调用前台评论组件，留空则不限制。使用空格或者逗号进行分割。）
+                  </label>
+                  <div class="tag-input">
+                    <div class="tag-input-inner">
+                      <span
+                        v-for="domain in allowedDomainTags"
+                        :key="domain"
+                        class="tag-input-tag"
+                      >
+                        <span class="tag-input-tag-text">{{ domain }}</span>
+                        <button
+                          type="button"
+                          class="tag-input-tag-remove"
+                          @click="removeAllowedDomain(domain)"
+                        >
+                          <PhTrash :size="14" />
+                        </button>
+                      </span>
+                      <input
+                        v-model="allowedDomainInput"
+                        class="tag-input-input"
+                        @keyup="handleAllowedDomainKeyup"
+                        @blur="handleAllowedDomainBlur"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div class="form-item">
-              <label class="form-label"
-                >邮箱黑名单（多个邮箱用逗号或换行分隔，留空则不限制）</label
-              >
-              <div class="tag-input">
-                <div class="tag-input-inner">
-                  <span
-                    v-for="email in blockedEmailTags"
-                    :key="email"
-                    class="tag-input-tag"
+                <div class="form-item">
+                  <label class="form-label">
+                    IP 黑名单（多个 IP 用逗号或换行分隔，留空则不限制）
+                  </label>
+                  <div class="tag-input">
+                    <div class="tag-input-inner">
+                      <span v-for="ip in blockedIpTags" :key="ip" class="tag-input-tag">
+                        <span class="tag-input-tag-text">{{ ip }}</span>
+                        <button
+                          type="button"
+                          class="tag-input-tag-remove"
+                          @click="removeBlockedIp(ip)"
+                        >
+                          <PhTrash :size="14" />
+                        </button>
+                      </span>
+                      <input
+                        v-model="blockedIpInput"
+                        class="tag-input-input"
+                        @keyup="handleBlockedIpKeyup"
+                        @blur="handleBlockedIpBlur"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-item">
+                  <label class="form-label"
+                    >邮箱黑名单（多个邮箱用逗号或换行分隔，留空则不限制）</label
                   >
-                    <span class="tag-input-tag-text">{{ email }}</span>
-                    <button
-                      type="button"
-                      class="tag-input-tag-remove"
-                      @click="removeBlockedEmail(email)"
-                    >
-                      <PhTrash :size="14" />
-                    </button>
-                  </span>
-                  <input
-                    v-model="blockedEmailInput"
-                    class="tag-input-input"
-                    @keyup="handleBlockedEmailKeyup"
-                    @blur="handleBlockedEmailBlur"
-                  />
+                  <div class="tag-input">
+                    <div class="tag-input-inner">
+                      <span
+                        v-for="email in blockedEmailTags"
+                        :key="email"
+                        class="tag-input-tag"
+                      >
+                        <span class="tag-input-tag-text">{{ email }}</span>
+                        <button
+                          type="button"
+                          class="tag-input-tag-remove"
+                          @click="removeBlockedEmail(email)"
+                        >
+                          <PhTrash :size="14" />
+                        </button>
+                      </span>
+                      <input
+                        v-model="blockedEmailInput"
+                        class="tag-input-input"
+                        @keyup="handleBlockedEmailKeyup"
+                        @blur="handleBlockedEmailBlur"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-actions">
+                  <button
+                    class="card-button"
+                    :disabled="savingComment"
+                    @click="saveComment"
+                  >
+                    <span v-if="savingComment">保存中...</span>
+                    <span v-else>保存</span>
+                  </button>
                 </div>
               </div>
             </div>
-
-            <div class="card-actions">
-              <button class="card-button" :disabled="savingComment" @click="saveComment">
-                <span v-if="savingComment">保存中...</span>
-                <span v-else>保存</span>
-              </button>
+          </template>
+          <template v-else-if="activeTab === 'feature'">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">功能开关</div>
+              </div>
+              <div class="card-body">
+                <div class="form-item">
+                  <label class="form-label">开启文章点赞功能</label>
+                  <label class="switch">
+                    <input v-model="enableArticleLike" type="checkbox" />
+                    <span class="slider" />
+                  </label>
+                  <div class="form-hint">
+                    开启后，评论区顶部会显示的文章点赞（喜欢）按钮。
+                  </div>
+                </div>
+                <div class="form-item">
+                  <label class="form-label">开启评论点赞功能</label>
+                  <label class="switch">
+                    <input v-model="enableCommentLike" type="checkbox" />
+                    <span class="slider" />
+                  </label>
+                  <div class="form-hint">
+                    开启后，评论列表中的每条评论都会显示点赞按钮。
+                  </div>
+                </div>
+                <div class="card-actions">
+                  <button
+                    class="card-button"
+                    :disabled="savingFeature"
+                    @click="saveFeature"
+                  >
+                    <span v-if="savingFeature">保存中...</span>
+                    <span v-else>保存</span>
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </transition>
-      </div>
+          </template>
+          <template v-else-if="activeTab === 'display'">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">后台显示设置</div>
+              </div>
+              <div class="card-body">
+                <div class="form-item">
+                  <label class="form-label">后台标题</label>
+                  <input
+                    v-model="adminLayoutTitle"
+                    class="form-input"
+                    type="text"
+                    placeholder="CWD 评论系统"
+                  />
+                  <div class="form-hint">显示在后台顶部导航栏左侧。</div>
+                </div>
+                <div class="card-actions">
+                  <button
+                    class="card-button"
+                    :disabled="savingDisplay"
+                    @click="saveDisplay"
+                  >
+                    <span v-if="savingDisplay">保存中...</span>
+                    <span v-else>保存</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </template>
+          <template v-else-if="activeTab === 'notify'">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">通知邮箱设置</div>
+              </div>
+              <div class="card-body">
+                <div class="form-item">
+                  <label class="form-label">开启邮件通知</label>
+                  <label class="switch">
+                    <input v-model="emailGlobalEnabled" type="checkbox" />
+                    <span class="slider" />
+                  </label>
+                </div>
 
-      <div class="card">
-        <div class="card-header" @click="toggleCard('feature')">
-          <div class="card-title">功能开关</div>
-          <div class="card-icon" :class="{ expanded: cardsExpanded.feature }">▼</div>
+                <div class="divider"></div>
+                <h4 class="card-subtitle">1. SMTP 发件配置</h4>
+
+                <div class="form-item">
+                  <label class="form-label">邮件服务商</label>
+                  <select
+                    v-model="smtpProvider"
+                    class="form-input"
+                    @change="onProviderChange"
+                  >
+                    <option value="qq">QQ 邮箱</option>
+                    <option value="custom">自定义 SMTP</option>
+                  </select>
+                </div>
+
+                <div v-if="smtpProvider === 'custom'">
+                  <div class="form-item">
+                    <label class="form-label">SMTP 服务器</label>
+                    <input
+                      v-model="smtpHost"
+                      class="form-input"
+                      placeholder="smtp.example.com"
+                    />
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">SMTP 端口</label>
+                    <input
+                      v-model="smtpPort"
+                      class="form-input"
+                      type="number"
+                      placeholder="465"
+                    />
+                  </div>
+                  <div class="form-item">
+                    <label class="form-label">SSL 安全连接</label>
+                    <label class="switch">
+                      <input v-model="smtpSecure" type="checkbox" />
+                      <span class="slider" />
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-item">
+                  <label class="form-label">发件邮箱账号</label>
+                  <input
+                    v-model="smtpUser"
+                    class="form-input"
+                    placeholder="例如: 123456@qq.com"
+                  />
+                </div>
+                <div class="form-item">
+                  <label class="form-label">授权码/密码</label>
+                  <input
+                    v-model="smtpPass"
+                    class="form-input"
+                    type="text"
+                    placeholder="QQ邮箱请使用授权码"
+                  />
+                  <div v-if="smtpProvider === 'qq'" class="form-hint">
+                    注意：QQ 邮箱必须使用<a
+                      href="https://service.mail.qq.com/detail/0/75"
+                      target="_blank"
+                      >授权码</a
+                    >，而非 QQ 密码。<br />
+                    请登录 QQ 邮箱网页版，在【设置 - 账户】中开启 POP3/SMTP
+                    服务并生成授权码。
+                  </div>
+                </div>
+
+                <div class="divider"></div>
+                <h4 class="card-subtitle">2. 邮件模板设置</h4>
+
+                <div class="form-item">
+                  <label class="form-label">管理员通知模板 (HTML)</label>
+                  <div class="form-hint">
+                    可用变量：${commentAuthor} (评论人昵称), ${postTitle} (文章标题),
+                    ${postUrl} (文章链接), ${commentContent} (评论内容)
+                  </div>
+                  <textarea
+                    v-model="templateAdmin"
+                    class="form-input"
+                    rows="10"
+                    placeholder="留空则使用默认模板"
+                  ></textarea>
+                </div>
+
+                <div class="form-item">
+                  <label class="form-label">回复通知模板 (HTML)</label>
+                  <div class="form-hint">
+                    可用变量：${toName} (接收人昵称), ${replyAuthor} (回复人昵称),
+                    ${postTitle} (文章标题), ${postUrl} (文章链接), ${parentComment}
+                    (原评论), ${replyContent} (回复内容)
+                  </div>
+                  <textarea
+                    v-model="templateReply"
+                    class="form-input"
+                    rows="10"
+                    placeholder="留空则使用默认模板"
+                  ></textarea>
+                </div>
+
+                <div
+                  v-if="message && messageType === 'error'"
+                  class="form-message form-message-error"
+                >
+                  {{ message }}
+                </div>
+                <div class="card-actions" style="justify-content: space-between">
+                  <button
+                    class="card-button secondary"
+                    :disabled="testingEmail"
+                    @click="testEmail"
+                  >
+                    <span v-if="testingEmail">发送中...</span>
+                    <span v-else>发送测试邮件</span>
+                  </button>
+                  <button
+                    class="card-button secondary"
+                    style="margin-left: auto"
+                    @click="resetTemplatesToDefault"
+                  >
+                    恢复默认模板
+                  </button>
+                  <button class="card-button" :disabled="savingEmail" @click="saveEmail">
+                    <span v-if="savingEmail">保存中...</span>
+                    <span v-else>保存配置</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">Telegram 通知设置</div>
+              </div>
+              <div class="card-body">
+                <div class="form-item">
+                  <label class="form-label">开启 Telegram 通知</label>
+                  <label class="switch">
+                    <input v-model="telegramNotifyEnabled" type="checkbox" />
+                    <span class="slider" />
+                  </label>
+                </div>
+                <div class="form-item">
+                  <label class="form-label">Bot Token</label>
+                  <input
+                    v-model="telegramBotToken"
+                    class="form-input"
+                    type="text"
+                    placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
+                  />
+                  <div class="form-hint">
+                    在 Telegram 中搜索
+                    <a href="https://t.me/BotFather" target="_blank">@BotFather</a>
+                    创建机器人获取 Token
+                  </div>
+                </div>
+                <div class="form-item">
+                  <label class="form-label">Chat ID</label>
+                  <input
+                    v-model="telegramChatId"
+                    class="form-input"
+                    type="text"
+                    placeholder="123456789"
+                  />
+                  <div class="form-hint">
+                    这是接收通知的用户 ID 或群组 ID。可以先给机器人发消息，然后通过 API
+                    获取 ID，或者使用
+                    <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a>
+                    查询。
+                  </div>
+                </div>
+
+                <div class="card-actions" style="justify-content: space-between">
+                  <button
+                    class="card-button secondary"
+                    :disabled="settingUpWebhook"
+                    @click="doSetupWebhook"
+                  >
+                    <span v-if="settingUpWebhook">设置中...</span>
+                    <span v-else>一键设置 Webhook</span>
+                  </button>
+                  <button
+                    class="card-button secondary"
+                    :disabled="testingTelegram"
+                    @click="testTelegram"
+                    style="margin-right: auto"
+                  >
+                    <span v-if="testingTelegram">发送中...</span>
+                    <span v-else>发送测试消息</span>
+                  </button>
+                  <button
+                    class="card-button"
+                    :disabled="savingTelegram"
+                    @click="saveTelegram"
+                  >
+                    <span v-if="savingTelegram">保存中...</span>
+                    <span v-else>保存</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </template>
         </div>
-        <transition name="collapse">
-          <div v-show="cardsExpanded.feature" class="card-body">
-            <div class="form-item">
-              <label class="form-label">开启文章点赞功能</label>
-              <label class="switch">
-                <input v-model="enableArticleLike" type="checkbox" />
-                <span class="slider" />
-              </label>
-              <div class="form-hint">
-                开启后，评论区顶部会显示的文章点赞（喜欢）按钮。
-              </div>
-            </div>
-            <div class="form-item">
-              <label class="form-label">开启评论点赞功能</label>
-              <label class="switch">
-                <input v-model="enableCommentLike" type="checkbox" />
-                <span class="slider" />
-              </label>
-              <div class="form-hint">开启后，评论列表中的每条评论都会显示点赞按钮。</div>
-            </div>
-            <div class="card-actions">
-              <button class="card-button" :disabled="savingFeature" @click="saveFeature">
-                <span v-if="savingFeature">保存中...</span>
-                <span v-else>保存</span>
-              </button>
-            </div>
-          </div>
-        </transition>
-      </div>
-
-      <div class="card">
-        <div class="card-header" @click="toggleCard('display')">
-          <div class="card-title">后台显示设置</div>
-          <div class="card-icon" :class="{ expanded: cardsExpanded.display }">▼</div>
-        </div>
-        <transition name="collapse">
-          <div v-show="cardsExpanded.display" class="card-body">
-            <div class="form-item">
-              <label class="form-label">后台标题</label>
-              <input
-                v-model="adminLayoutTitle"
-                class="form-input"
-                type="text"
-                placeholder="CWD 评论系统"
-              />
-              <div class="form-hint">显示在后台顶部导航栏左侧。</div>
-            </div>
-            <div class="card-actions">
-              <button class="card-button" :disabled="savingDisplay" @click="saveDisplay">
-                <span v-if="savingDisplay">保存中...</span>
-                <span v-else>保存</span>
-              </button>
-            </div>
-          </div>
-        </transition>
-      </div>
-
-      <div class="card">
-        <div class="card-header" @click="toggleCard('email')">
-          <div class="card-title">通知邮箱设置</div>
-          <div class="card-icon" :class="{ expanded: cardsExpanded.email }">▼</div>
-        </div>
-        <transition name="collapse">
-          <div v-show="cardsExpanded.email" class="card-body">
-            <div class="form-item">
-              <label class="form-label">开启邮件通知</label>
-              <label class="switch">
-                <input v-model="emailGlobalEnabled" type="checkbox" />
-                <span class="slider" />
-              </label>
-            </div>
-
-            <div class="divider"></div>
-            <h4 class="card-subtitle">1. SMTP 发件配置</h4>
-
-            <div class="form-item">
-              <label class="form-label">邮件服务商</label>
-              <select
-                v-model="smtpProvider"
-                class="form-input"
-                @change="onProviderChange"
-              >
-                <option value="qq">QQ 邮箱</option>
-                <option value="custom">自定义 SMTP</option>
-              </select>
-            </div>
-
-            <div v-if="smtpProvider === 'custom'">
-              <div class="form-item">
-                <label class="form-label">SMTP 服务器</label>
-                <input
-                  v-model="smtpHost"
-                  class="form-input"
-                  placeholder="smtp.example.com"
-                />
-              </div>
-              <div class="form-item">
-                <label class="form-label">SMTP 端口</label>
-                <input
-                  v-model="smtpPort"
-                  class="form-input"
-                  type="number"
-                  placeholder="465"
-                />
-              </div>
-              <div class="form-item">
-                <label class="form-label">SSL 安全连接</label>
-                <label class="switch">
-                  <input v-model="smtpSecure" type="checkbox" />
-                  <span class="slider" />
-                </label>
-              </div>
-            </div>
-
-            <div class="form-item">
-              <label class="form-label">发件邮箱账号</label>
-              <input
-                v-model="smtpUser"
-                class="form-input"
-                placeholder="例如: 123456@qq.com"
-              />
-            </div>
-            <div class="form-item">
-              <label class="form-label">授权码/密码</label>
-              <input
-                v-model="smtpPass"
-                class="form-input"
-                type="text"
-                placeholder="QQ邮箱请使用授权码"
-              />
-              <div v-if="smtpProvider === 'qq'" class="form-hint">
-                注意：QQ 邮箱必须使用<a
-                  href="https://service.mail.qq.com/detail/0/75"
-                  target="_blank"
-                  >授权码</a
-                >，而非 QQ 密码。<br />
-                请登录 QQ 邮箱网页版，在【设置 - 账户】中开启 POP3/SMTP 服务并生成授权码。
-              </div>
-            </div>
-
-            <div class="divider"></div>
-            <h4 class="card-subtitle">2. 邮件模板设置</h4>
-
-            <div class="form-item">
-              <label class="form-label">管理员通知模板 (HTML)</label>
-              <div class="form-hint">
-                可用变量：${commentAuthor} (评论人昵称), ${postTitle} (文章标题),
-                ${postUrl} (文章链接), ${commentContent} (评论内容)
-              </div>
-              <textarea
-                v-model="templateAdmin"
-                class="form-input"
-                rows="10"
-                placeholder="留空则使用默认模板"
-              ></textarea>
-            </div>
-
-            <div class="form-item">
-              <label class="form-label">回复通知模板 (HTML)</label>
-              <div class="form-hint">
-                可用变量：${toName} (接收人昵称), ${replyAuthor} (回复人昵称),
-                ${postTitle} (文章标题), ${postUrl} (文章链接), ${parentComment} (原评论),
-                ${replyContent} (回复内容)
-              </div>
-              <textarea
-                v-model="templateReply"
-                class="form-input"
-                rows="10"
-                placeholder="留空则使用默认模板"
-              ></textarea>
-            </div>
-
-            <div
-              v-if="message && messageType === 'error'"
-              class="form-message form-message-error"
-            >
-              {{ message }}
-            </div>
-            <div class="card-actions" style="justify-content: space-between">
-              <button
-                class="card-button secondary"
-                :disabled="testingEmail"
-                @click="testEmail"
-              >
-                <span v-if="testingEmail">发送中...</span>
-                <span v-else>发送测试邮件</span>
-              </button>
-              <button
-                class="card-button secondary"
-                style="margin-left: auto"
-                @click="resetTemplatesToDefault"
-              >
-                恢复默认模板
-              </button>
-              <button class="card-button" :disabled="savingEmail" @click="saveEmail">
-                <span v-if="savingEmail">保存中...</span>
-                <span v-else>保存配置</span>
-              </button>
-            </div>
-          </div>
-        </transition>
-      </div>
-
-      <div class="card">
-        <div class="card-header" @click="toggleCard('telegram')">
-          <div class="card-title">Telegram 通知设置</div>
-          <div class="card-icon" :class="{ expanded: cardsExpanded.telegram }">▼</div>
-        </div>
-        <transition name="collapse">
-          <div v-show="cardsExpanded.telegram" class="card-body">
-            <div class="form-item">
-              <label class="form-label">开启 Telegram 通知</label>
-              <label class="switch">
-                <input v-model="telegramNotifyEnabled" type="checkbox" />
-                <span class="slider" />
-              </label>
-            </div>
-            <div class="form-item">
-              <label class="form-label">Bot Token</label>
-              <input
-                v-model="telegramBotToken"
-                class="form-input"
-                type="text"
-                placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11"
-              />
-              <div class="form-hint">
-                在 Telegram 中搜索
-                <a href="https://t.me/BotFather" target="_blank">@BotFather</a>
-                创建机器人获取 Token
-              </div>
-            </div>
-            <div class="form-item">
-              <label class="form-label">Chat ID</label>
-              <input
-                v-model="telegramChatId"
-                class="form-input"
-                type="text"
-                placeholder="123456789"
-              />
-              <div class="form-hint">
-                这是接收通知的用户 ID 或群组 ID。可以先给机器人发消息，然后通过 API 获取
-                ID，或者使用
-                <a href="https://t.me/userinfobot" target="_blank">@userinfobot</a> 查询。
-              </div>
-            </div>
-
-            <div class="card-actions" style="justify-content: space-between">
-              <button
-                class="card-button secondary"
-                :disabled="settingUpWebhook"
-                @click="doSetupWebhook"
-              >
-                <span v-if="settingUpWebhook">设置中...</span>
-                <span v-else>一键设置 Webhook</span>
-              </button>
-              <button
-                class="card-button secondary"
-                :disabled="testingTelegram"
-                @click="testTelegram"
-                style="margin-right: auto"
-              >
-                <span v-if="testingTelegram">发送中...</span>
-                <span v-else>发送测试消息</span>
-              </button>
-              <button
-                class="card-button"
-                :disabled="savingTelegram"
-                @click="saveTelegram"
-              >
-                <span v-if="savingTelegram">保存中...</span>
-                <span v-else>保存</span>
-              </button>
-            </div>
-          </div>
-        </transition>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -553,6 +596,8 @@ const telegramNotifyEnabled = ref(false);
 const savingTelegram = ref(false);
 const settingUpWebhook = ref(false);
 const testingTelegram = ref(false);
+
+const activeTab = ref<"comment" | "feature" | "display" | "notify">("comment");
 
 function addAllowedDomainsFromInput() {
   const raw = allowedDomainInput.value;

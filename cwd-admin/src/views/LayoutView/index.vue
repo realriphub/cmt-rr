@@ -354,9 +354,8 @@ function closeVersionModal() {
 }
 </script>
 
-<style scoped lang="less">
+<style lang="less">
 @import "../../styles/layout.less";
-
 .modal-overlay {
   position: fixed;
   inset: 0;

@@ -1,7 +1,3 @@
-h1 {
-  color: red;
-}
-
 .page {
   display: flex;
   flex-direction: column;
@@ -13,6 +9,39 @@ h1 {
   margin: 0;
   font-size: 18px;
   color: var(--text-primary);
+}
+
+.settings-tabs {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  padding: 2px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-input);
+  margin: 12px 0 16px;
+  overflow-x: auto;
+}
+
+.settings-tab {
+  border: none;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.settings-tab+.settings-tab {
+  margin-left: 4px;
+}
+
+.settings-tab-active {
+  background-color: var(--primary-color);
+  color: var(--text-inverse);
 }
 
 .card {
@@ -28,7 +57,6 @@ h1 {
   justify-content: space-between;
   align-items: center;
   padding: 6px 0;
-  cursor: pointer;
   user-select: none;
   transition: background-color 0.2s;
 }
@@ -48,10 +76,6 @@ h1 {
 
 .card-icon.expanded {
   transform: rotate(180deg);
-}
-
-.card-body {
-  /* padding-top: 4px; */
 }
 
 .card-subtitle {
@@ -171,30 +195,6 @@ h1 {
   color: var(--text-primary);
 }
 
-.toast {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 220px;
-  max-width: 320px;
-  padding: 10px 14px;
-  border-radius: 6px;
-  font-size: 13px;
-  box-shadow: var(--shadow-card);
-  z-index: 1000;
-}
-
-.toast-success {
-  background-color: var(--color-success);
-  color: var(--text-inverse);
-}
-
-.toast-error {
-  background-color: var(--color-danger);
-  color: var(--text-inverse);
-}
-
 .switch {
   position: relative;
   display: inline-flex;
@@ -244,6 +244,7 @@ h1 {
 
 .card-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   justify-content: flex-end;
 }
@@ -354,4 +355,15 @@ h1 {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
+}
+
+.tab-fade-enter-active,
+.tab-fade-leave-active {
+  transition: opacity 0.1s ease, transform 0.1s ease;
+}
+
+.tab-fade-enter-from,
+.tab-fade-leave-to {
+  opacity: 0;
+  transform: translateY(4px);
 }
