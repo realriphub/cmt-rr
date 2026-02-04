@@ -43,6 +43,7 @@ export class CommentForm extends Component {
 		const canSubmit = localForm.name.trim() && localForm.email.trim() && localForm.content.trim();
 		const isAdmin = this.props.adminEmail && localForm.email.trim() === this.props.adminEmail;
 		const isVerified = isAdmin && auth.hasToken();
+		const placeholderText = this.props.placeholder || '';
 
 		const root = this.createElement('form', {
 			className: 'cwd-comment-form',
@@ -104,6 +105,7 @@ export class CommentForm extends Component {
 									className: `cwd-form-textarea ${formErrors.content ? 'cwd-input-error' : ''}`,
 									attributes: {
 										rows: 4,
+										placeholder: placeholderText,
 										disabled: submitting,
 										onInput: (e) => this.handleFieldChange('content', e.target.value),
 										onKeydown: (e) => this.handleContentKeydown(e),

@@ -101,6 +101,8 @@ export class CWDComments {
 				allowedDomains: Array.isArray(data.allowedDomains) ? data.allowedDomains : [],
 				enableCommentLike: typeof data.enableCommentLike === 'boolean' ? data.enableCommentLike : true,
 				enableArticleLike: typeof data.enableArticleLike === 'boolean' ? data.enableArticleLike : true,
+				commentPlaceholder:
+					typeof data.commentPlaceholder === 'string' ? data.commentPlaceholder : undefined,
 			};
 		} catch (e) {
 			return {};
@@ -168,16 +170,20 @@ export class CWDComments {
 			this.config.requireReview = !!serverConfig.requireReview;
 			this.config.enableCommentLike = serverConfig.enableCommentLike;
 			this.config.enableArticleLike = serverConfig.enableArticleLike;
+			this.config.commentPlaceholder =
+				typeof serverConfig.commentPlaceholder === 'string'
+					? serverConfig.commentPlaceholder
+					: this.config.commentPlaceholder;
 
 			const api = createApiClient(this.config);
 			this.api = api;
 			if (this.hostElement && this.mountPoint) {
-				this.store = createCommentStore(
-					this.config,
-					api.fetchComments.bind(api),
-					api.submitComment.bind(api),
-					typeof api.likeComment === 'function' ? api.likeComment.bind(api) : undefined,
-				);
+        this.store = createCommentStore(
+          this.config,
+          api.fetchComments.bind(api),
+          api.submitComment.bind(api),
+          typeof api.likeComment === 'function' ? api.likeComment.bind(api) : undefined,
+        );
 
 				this.unsubscribe = this.store.store.subscribe((state, prevState) => {
 					this._onStateChange(state, prevState);
@@ -339,6 +345,7 @@ export class CWDComments {
 				onFieldChange: (field, value) => this.store.updateFormField(field, value),
 				adminEmail: this.config.adminEmail,
 				onVerifyAdmin: (key) => this.api.verifyAdminKey(key),
+				placeholder: this.config.commentPlaceholder,
 			});
 			this.commentForm.render();
 		}
@@ -367,7 +374,7 @@ export class CWDComments {
 			const listContainer = document.createElement('div');
 			this.mountPoint.appendChild(listContainer);
 
-			this.commentList = new CommentList(listContainer, {
+        this.commentList = new CommentList(listContainer, {
 				comments: state.comments,
 				loading: state.loading,
 				error: null,
@@ -388,6 +395,7 @@ export class CWDComments {
 				onCancelReply: () => this.store.cancelReply(),
 				onUpdateReplyContent: (content) => this.store.updateReplyContent(content),
 				onClearReplyError: () => this.store.clearReplyError(),
+          replyPlaceholder: this.config.commentPlaceholder,
 				onPrevPage: () => this.store.goToPage(state.pagination.page - 1),
 				onNextPage: () => this.store.goToPage(state.pagination.page + 1),
 				onGoToPage: (page) => this.store.goToPage(page),

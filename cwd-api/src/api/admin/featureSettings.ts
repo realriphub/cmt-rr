@@ -25,10 +25,15 @@ export const updateFeatureSettings = async (c: Context<{ Bindings: Bindings }>) 
 			typeof body.enableArticleLike === 'boolean'
 				? body.enableArticleLike
 				: undefined;
+		const rawCommentPlaceholder =
+			typeof body.commentPlaceholder === 'string' ? body.commentPlaceholder : undefined;
+		const commentPlaceholder =
+			rawCommentPlaceholder !== undefined ? rawCommentPlaceholder.trim() : undefined;
 
 		await saveFeatureSettings(c.env, {
 			enableCommentLike,
-			enableArticleLike
+			enableArticleLike,
+			commentPlaceholder
 		});
 
 		return c.json({ message: '保存成功！' });

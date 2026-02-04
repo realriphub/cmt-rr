@@ -224,6 +224,20 @@
                     开启后，评论列表中的每条评论都会显示点赞按钮。
                   </div>
                 </div>
+      
+                <div class="form-item">
+                  <label class="form-label">评论框提示文案 (Placeholder)</label>
+                  <textarea
+                    v-model="commentPlaceholder"
+                    class="form-input"
+                    rows="3"
+                    style="height:90px;resize:none;"
+                    placeholder="默认：写下你的评论，可换行书写提示"
+                  ></textarea>
+                  <div class="form-hint">
+                    自定义评论输入框的提示文字，支持换行。留空则使用默认值。
+                  </div>
+                </div>
                 <div class="card-actions">
                   <button
                     class="card-button"
@@ -600,6 +614,7 @@ const adminKeySet = ref(false);
 const requireReview = ref(false);
 const enableArticleLike = ref(true);
 const enableCommentLike = ref(true);
+const commentPlaceholder = ref("");
 const telegramBotToken = ref("");
 const telegramChatId = ref("");
 const telegramNotifyEnabled = ref(false);
@@ -853,6 +868,7 @@ async function load() {
     emailGlobalEnabled.value = !!emailNotifyRes.globalEnabled;
     enableArticleLike.value = featureRes.enableArticleLike;
     enableCommentLike.value = featureRes.enableCommentLike;
+    commentPlaceholder.value = featureRes.commentPlaceholder || "";
 
     telegramBotToken.value = telegramRes.botToken || "";
     telegramChatId.value = telegramRes.chatId || "";
@@ -998,6 +1014,7 @@ async function saveFeature() {
       saveFeatureSettings({
         enableArticleLike: enableArticleLike.value,
         enableCommentLike: enableCommentLike.value,
+        commentPlaceholder: commentPlaceholder.value,
       }),
     ]);
 
