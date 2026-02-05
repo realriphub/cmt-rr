@@ -30,10 +30,15 @@ export const updateFeatureSettings = async (c: Context<{ Bindings: Bindings }>) 
 		const commentPlaceholder =
 			rawCommentPlaceholder !== undefined ? rawCommentPlaceholder.trim() : undefined;
 
+		const visibleDomains = Array.isArray(body.visibleDomains)
+			? (body.visibleDomains as string[])
+			: undefined;
+
 		await saveFeatureSettings(c.env, {
 			enableCommentLike,
 			enableArticleLike,
-			commentPlaceholder
+			commentPlaceholder,
+			visibleDomains
 		});
 
 		return c.json({ message: '保存成功！' });

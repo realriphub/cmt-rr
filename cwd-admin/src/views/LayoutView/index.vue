@@ -173,7 +173,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, provide, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { logoutAdmin, fetchDomainList, fetchAdminDisplaySettings } from "../../api/admin";
+import { logoutAdmin, fetchDomainList, fetchAdminDisplaySettings, fetchFeatureSettings } from "../../api/admin";
 import { useTheme } from "../../composables/useTheme";
 import packageJson from "../../../package.json";
 
@@ -215,8 +215,18 @@ const domainOptions = ref<string[]>([]);
 
 async function loadDomains() {
   try {
-    const res = await fetchDomainList();
-    const domains = Array.isArray(res.domains) ? res.domains : [];
+    const [domainRes, settingsRes] = await Promise.all([
+      fetchDomainList(),
+      fetchFeatureSettings().catch(() => ({ visibleDomains: undefined }))
+    ]);
+    
+    let domains = Array.isArray(domainRes.domains) ? domainRes.domains : [];
+    
+    // 如果配置了显示域名，则仅显示配置的域名
+    if (settingsRes.visibleDomains && Array.isArray(settingsRes.visibleDomains) && settingsRes.visibleDomains.length > 0) {
+        domains = settingsRes.visibleDomains;
+    }
+
     const set = new Set(domains);
     if (domainFilter.value && !set.has(domainFilter.value)) {
       set.add(domainFilter.value);

@@ -3,11 +3,13 @@ import { Bindings } from '../bindings';
 export const FEATURE_COMMENT_LIKE_KEY = 'comment_feature_comment_like';
 export const FEATURE_ARTICLE_LIKE_KEY = 'comment_feature_article_like';
 export const FEATURE_COMMENT_PLACEHOLDER_KEY = 'comment_feature_placeholder';
+export const FEATURE_VISIBLE_DOMAINS_KEY = 'admin_visible_domains';
 
 export type FeatureSettings = {
 	enableCommentLike: boolean;
 	enableArticleLike: boolean;
 	commentPlaceholder?: string;
+	visibleDomains?: string[];
 };
 
 export async function loadFeatureSettings(env: Bindings): Promise<FeatureSettings> {
@@ -15,9 +17,14 @@ export async function loadFeatureSettings(env: Bindings): Promise<FeatureSetting
 		'CREATE TABLE IF NOT EXISTS Settings (key TEXT PRIMARY KEY, value TEXT NOT NULL)'
 	).run();
 
-	const keys = [FEATURE_COMMENT_LIKE_KEY, FEATURE_ARTICLE_LIKE_KEY, FEATURE_COMMENT_PLACEHOLDER_KEY];
+	const keys = [
+		FEATURE_COMMENT_LIKE_KEY,
+		FEATURE_ARTICLE_LIKE_KEY,
+		FEATURE_COMMENT_PLACEHOLDER_KEY,
+		FEATURE_VISIBLE_DOMAINS_KEY
+	];
 	const { results } = await env.CWD_DB.prepare(
-		'SELECT key, value FROM Settings WHERE key IN (?, ?, ?)'
+		'SELECT key, value FROM Settings WHERE key IN (?, ?, ?, ?)'
 	)
 		.bind(...keys)
 		.all<{ key: string; value: string }>();
@@ -51,10 +58,21 @@ export async function loadFeatureSettings(env: Bindings): Promise<FeatureSetting
 
 	const commentPlaceholder = map.get(FEATURE_COMMENT_PLACEHOLDER_KEY);
 
+	let visibleDomains: string[] | undefined;
+	const visibleDomainsRaw = map.get(FEATURE_VISIBLE_DOMAINS_KEY);
+	if (visibleDomainsRaw) {
+		try {
+			visibleDomains = JSON.parse(visibleDomainsRaw);
+		} catch (e) {
+			// ignore error
+		}
+	}
+
 	return {
 		enableCommentLike,
 		enableArticleLike,
-		commentPlaceholder
+		commentPlaceholder,
+		visibleDomains
 	};
 }
 
@@ -88,6 +106,10 @@ export async function saveFeatureSettings(
 		{
 			key: FEATURE_COMMENT_PLACEHOLDER_KEY,
 			value: settings.commentPlaceholder
+		},
+		{
+			key: FEATURE_VISIBLE_DOMAINS_KEY,
+			value: settings.visibleDomains ? JSON.stringify(settings.visibleDomains) : undefined
 		}
 	];
 

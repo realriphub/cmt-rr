@@ -131,6 +131,7 @@ export type FeatureSettingsResponse = {
 	enableCommentLike: boolean;
 	enableArticleLike: boolean;
 	commentPlaceholder?: string;
+	visibleDomains?: string[];
 };
 
 export type AdminDisplaySettingsResponse = {
@@ -332,7 +333,7 @@ export function fetchFeatureSettings(): Promise<FeatureSettingsResponse> {
 	return get<FeatureSettingsResponse>('/admin/settings/features');
 }
 
-export function saveFeatureSettings(data: { enableCommentLike?: boolean; enableArticleLike?: boolean; commentPlaceholder?: string }): Promise<{ message: string }> {
+export function saveFeatureSettings(data: { enableCommentLike?: boolean; enableArticleLike?: boolean; commentPlaceholder?: string; visibleDomains?: string[] }): Promise<{ message: string }> {
 	return put<{ message: string }>('/admin/settings/features', data);
 }
 

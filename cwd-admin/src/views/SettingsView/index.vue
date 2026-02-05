@@ -38,6 +38,14 @@
         <button
           type="button"
           class="settings-tab"
+          :class="{ 'settings-tab-active': activeTab === 'domain' }"
+          @click="activeTab = 'domain'"
+        >
+          域名管理
+        </button>
+        <button
+          type="button"
+          class="settings-tab"
           :class="{ 'settings-tab-active': activeTab === 'emailNotify' }"
           @click="activeTab = 'emailNotify'"
         >
@@ -277,6 +285,16 @@
                     <span v-else>保存</span>
                   </button>
                 </div>
+              </div>
+            </div>
+          </template>
+          <template v-else-if="activeTab === 'domain'">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">域名选择管理</div>
+              </div>
+              <div class="card-body">
+                <DomainSettings />
               </div>
             </div>
           </template>
@@ -527,6 +545,8 @@ import {
   sendTelegramTestMessage,
 } from "../../api/admin";
 
+import DomainSettings from "./components/DomainSettings.vue";
+
 const DEFAULT_REPLY_TEMPLATE = `<div style="background-color:#f4f4f5;padding:24px 0;">
       <div style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px;border:1px solid #e5e7eb;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;color:#111827;">
         <div style="padding:20px 28px;border-bottom:1px solid #e5e7eb;background:linear-gradient(135deg,#2563eb,#4f46e5);">
@@ -627,7 +647,7 @@ const savingTelegram = ref(false);
 const settingUpWebhook = ref(false);
 const testingTelegram = ref(false);
 
-const activeTab = ref<"comment" | "feature" | "display" | "emailNotify" | "telegramNotify">(
+const activeTab = ref<"comment" | "feature" | "display" | "emailNotify" | "telegramNotify" | "domain">(
   "comment",
 );
 
