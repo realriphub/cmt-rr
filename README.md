@@ -22,7 +22,7 @@
 
 </div>
 
-## 1. Preview
+## Preview
 
 **评论端**
 ![](https://github.com/user-attachments/assets/34096ce5-512d-4ddb-b409-edef6a2674ed)
@@ -41,11 +41,7 @@
 </p>
 </details> 
 
-## Star History
-
-![Star History Chart](https://api.star-history.com/svg?repos=anghunk/cwd&type=date&legend=top-left)
-
-## 2. Thanks
+## Thanks
 
 感谢以下项目和人员的贡献：
 
@@ -53,6 +49,6 @@
 - [Cloudflare D1](https://www.cloudflare.com/products/database/)
 - [Momo-Backend](https://github.com/Motues/Momo-Backend)
 
-## 3. LICENSE
+## LICENSE
 
 开源协议：[Apache-2.0](./LICENSE)
