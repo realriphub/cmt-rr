@@ -528,7 +528,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, type Ref, inject } from "vue";
+import { onMounted, ref, type Ref, inject, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import {
   fetchCommentSettings,
   saveCommentSettings,
@@ -647,8 +648,42 @@ const savingTelegram = ref(false);
 const settingUpWebhook = ref(false);
 const testingTelegram = ref(false);
 
-const activeTab = ref<"comment" | "feature" | "display" | "emailNotify" | "telegramNotify" | "domain">(
+const route = useRoute();
+const router = useRouter();
+
+type TabKey =
+  | "comment"
+  | "feature"
+  | "display"
+  | "emailNotify"
+  | "telegramNotify"
+  | "domain";
+const validTabs: TabKey[] = [
   "comment",
+  "feature",
+  "display",
+  "emailNotify",
+  "telegramNotify",
+  "domain",
+];
+
+const activeTab = ref<TabKey>(
+  validTabs.includes(route.query.tab as TabKey)
+    ? (route.query.tab as TabKey)
+    : "comment",
+);
+
+watch(activeTab, (newTab) => {
+  router.replace({ query: { ...route.query, tab: newTab } });
+});
+
+watch(
+  () => route.query.tab,
+  (newTab) => {
+    if (newTab && validTabs.includes(newTab as TabKey)) {
+      activeTab.value = newTab as TabKey;
+    }
+  },
 );
 
 function addAllowedDomainsFromInput() {

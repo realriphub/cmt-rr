@@ -40,10 +40,10 @@
       <!-- Actions -->
       <div class="transfer-actions">
         <button class="action-btn" @click="moveAllToVisible" title="全部左移">
-          <PhChecks :size="20" />
+          <PhCaretDoubleLeft />
         </button>
         <button class="action-btn" @click="moveAllToHidden" title="全部右移">
-          <PhTrash :size="20" />
+          <PhCaretDoubleRight  />
         </button>
       </div>
 
@@ -91,7 +91,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue';
 import { fetchDomainList, fetchFeatureSettings, saveFeatureSettings } from '../../../api/admin';
-import { PhArrowRight, PhArrowLeft, PhChecks, PhTrash } from '@phosphor-icons/vue';
 
 const loading = ref(false);
 const allDomains = ref<string[]>([]);
