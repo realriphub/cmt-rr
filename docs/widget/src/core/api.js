@@ -128,7 +128,7 @@ export function createApiClient(config) {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    postSlug: config.postSlug,
+                    postSlug: config.postUrl || config.postSlug,
                     postTitle: config.postTitle,
                     postUrl: config.postUrl
                 })

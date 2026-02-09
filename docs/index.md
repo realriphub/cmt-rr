@@ -14,6 +14,9 @@ hero:
     - theme: alt
       text: Github
       link: https://github.com/anghunk/cwd
+    - theme: alt
+      text: 常见问题
+      link: /common-problems
 
 features:
   - icon: ⚡️

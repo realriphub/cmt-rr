@@ -28,6 +28,7 @@ CWD 评论组件采用 **Shadow DOM** 技术构建，基于独立根节点渲染
 	const comments = new CWDComments({
 		el: '#comments',
 		apiBaseUrl: 'https://your-api.example.com', // 换成你的 API 地址
+		siteId: 'your-site-id', // 换成你的站点 ID（关键词），比如 blog
 	});
 	comments.mount();
 </script>

@@ -263,22 +263,15 @@ export const getVisitPages = async (c: Context<{ Bindings: Bindings }>) => {
 		const rawDomain = c.req.query('domain') || '';
 		const domainFilter = rawDomain.trim().toLowerCase();
 		const rawOrder = c.req.query('order') || '';
-		const order = rawOrder.trim().toLowerCase();
-		const isLatest = order === 'latest';
+		const order = rawOrder.trim().toLowerCase() === 'latest' ? 'latest' : 'pv';
 
 		await c.env.CWD_DB.prepare(
 			'CREATE TABLE IF NOT EXISTS page_stats (id INTEGER PRIMARY KEY AUTOINCREMENT, post_slug TEXT UNIQUE NOT NULL, post_title TEXT, post_url TEXT, pv INTEGER NOT NULL DEFAULT 0, last_visit_at INTEGER, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL)'
 		).run();
 
-		let sql =
-			'SELECT post_slug, post_title, post_url, pv, last_visit_at FROM page_stats ORDER BY pv DESC, last_visit_at DESC';
-
-		if (isLatest) {
-			sql =
-				'SELECT post_slug, post_title, post_url, pv, last_visit_at FROM page_stats ORDER BY last_visit_at DESC, pv DESC';
-		}
-
-		const { results } = await c.env.CWD_DB.prepare(sql).all<{
+		const { results } = await c.env.CWD_DB.prepare(
+			'SELECT post_slug, post_title, post_url, pv, last_visit_at FROM page_stats'
+		).all<{
 			post_slug: string;
 			post_title: string | null;
 			post_url: string | null;
@@ -307,9 +300,44 @@ export const getVisitPages = async (c: Context<{ Bindings: Bindings }>) => {
 			});
 		}
 
-		items = items.slice(0, 20);
+		const itemsByPv = items
+			.slice()
+			.sort((a, b) => {
+				if (b.pv !== a.pv) {
+					return b.pv - a.pv;
+				}
+				const aLast = a.lastVisitAt ?? 0;
+				const bLast = b.lastVisitAt ?? 0;
+				return bLast - aLast;
+			})
+			.slice(0, 20);
 
-		return c.json({ items });
+		const itemsByLatest = items
+			.slice()
+			.sort((a, b) => {
+				const aLast = a.lastVisitAt ?? 0;
+				const bLast = b.lastVisitAt ?? 0;
+				if (bLast !== aLast) {
+					return bLast - aLast;
+				}
+				return b.pv - a.pv;
+			})
+			.slice(0, 20);
+
+		const response =
+			order === 'latest'
+				? {
+						items: itemsByLatest,
+						itemsByPv,
+						itemsByLatest
+				  }
+				: {
+						items: itemsByPv,
+						itemsByPv,
+						itemsByLatest
+				  };
+
+		return c.json(response);
 	} catch (e: any) {
 		return c.json(
 			{ message: e.message || '获取页面访问统计失败' },

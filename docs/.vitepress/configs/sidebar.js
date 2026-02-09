@@ -20,7 +20,14 @@ export const rootSidebar = [
 			{ text: '数据管理', link: '/function/data-migration' },
 		],
 	},
+	{
+		text: '配置',
+		items: [
+			{ text: '站点隔离', link: '/config/site-isolation' },
+		],
+	},
 	{ text: '反馈', link: '/guide/feedback' },
+	{ text: '常见问题', link: '/common-problems' },
 ];
 
 export const apiSidebar = [

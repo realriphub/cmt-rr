@@ -111,6 +111,8 @@ export type VisitPageItem = {
 
 export type VisitPagesResponse = {
 	items: VisitPageItem[];
+	itemsByPv?: VisitPageItem[];
+	itemsByLatest?: VisitPageItem[];
 };
 
 export type DomainListResponse = {

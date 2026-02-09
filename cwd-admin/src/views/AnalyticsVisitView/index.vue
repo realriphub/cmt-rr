@@ -150,12 +150,12 @@
             </div>
             <div class="domain-cell domain-cell-url">
               <a
-                v-if="item.postSlug"
-                :href="item.postSlug"
+                v-if="item.postUrl"
+                :href="item.postUrl"
                 target="_blank"
                 rel="noreferrer"
               >
-                {{ item.postSlug }}
+                {{ item.postUrl }}
               </a>
               <span v-else>-</span>
             </div>
@@ -259,24 +259,13 @@ const monthPercentageChange = computed(() => {
   return calculateChange(overview.value.monthPv, overview.value.lastMonthPv || 0);
 });
 
-const rawItems = ref<VisitPageItem[]>([]);
+const itemsByPv = ref<VisitPageItem[]>([]);
+const itemsByLatest = ref<VisitPageItem[]>([]);
 const items = computed<VisitPageItem[]>(() => {
-  const list = rawItems.value.slice();
-  list.sort((a, b) => {
-    const aLast = getLastVisitAtTs(a.lastVisitAt);
-    const bLast = getLastVisitAtTs(b.lastVisitAt);
-    if (visitTab.value === "latest") {
-      if (bLast !== aLast) {
-        return bLast - aLast;
-      }
-      return b.pv - a.pv;
-    }
-    if (b.pv !== a.pv) {
-      return b.pv - a.pv;
-    }
-    return bLast - aLast;
-  });
-  return list;
+  if (visitTab.value === "latest") {
+    return itemsByLatest.value;
+  }
+  return itemsByPv.value;
 });
 const visitTab = ref<"pv" | "latest">("pv");
 const visitTabStorageKey = "cwd-analytics-visit-tab";
@@ -353,11 +342,11 @@ function extractDomain(source: string | null | undefined): string | null {
   }
 }
 
-function getVisitOrderParam(): "pv" | "latest" | undefined {
+function getVisitOrderParam(): "pv" | "latest" {
   if (visitTab.value === "latest") {
     return "latest";
   }
-  return undefined;
+  return "pv";
 }
 
 function filterLikeStatsByDomain(list: LikeStatsItem[], domain: string | undefined): LikeStatsItem[] {
@@ -457,8 +446,36 @@ async function loadData() {
     };
     const likeItemsRaw = Array.isArray(likeStatsRes.items) ? likeStatsRes.items : [];
     likeStatsItems.value = filterLikeStatsByDomain(likeItemsRaw, domain);
-    const pageItems = Array.isArray(pagesRes.items) ? pagesRes.items : [];
-    rawItems.value = pageItems;
+    const pageItemsByPv = Array.isArray(pagesRes.itemsByPv)
+      ? pagesRes.itemsByPv
+      : [];
+    const pageItemsByLatest = Array.isArray(pagesRes.itemsByLatest)
+      ? pagesRes.itemsByLatest
+      : [];
+    if (pageItemsByPv.length === 0 && pageItemsByLatest.length === 0) {
+      const baseItems = Array.isArray(pagesRes.items) ? pagesRes.items : [];
+      const sortedByPv = baseItems.slice().sort((a, b) => {
+        if (b.pv !== a.pv) {
+          return b.pv - a.pv;
+        }
+        const aLast = getLastVisitAtTs(a.lastVisitAt);
+        const bLast = getLastVisitAtTs(b.lastVisitAt);
+        return bLast - aLast;
+      });
+      const sortedByLatest = baseItems.slice().sort((a, b) => {
+        const aLast = getLastVisitAtTs(a.lastVisitAt);
+        const bLast = getLastVisitAtTs(b.lastVisitAt);
+        if (bLast !== aLast) {
+          return bLast - aLast;
+        }
+        return b.pv - a.pv;
+      });
+      itemsByPv.value = sortedByPv;
+      itemsByLatest.value = sortedByLatest;
+    } else {
+      itemsByPv.value = pageItemsByPv;
+      itemsByLatest.value = pageItemsByLatest;
+    }
     last30Days.value = Array.isArray(overviewRes.last30Days)
       ? overviewRes.last30Days
       : [];
