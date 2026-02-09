@@ -33,28 +33,39 @@ export const getComments = async (c: Context<{ Bindings: Bindings }>) => {
   }
 
   try {
-    let query = `
-      SELECT id, name, email, url, content_text as contentText, 
+    const equalSlugs = Array.from(new Set(slugList))
+    const likePatternsSet = new Set<string>()
+    for (const s of equalSlugs) {
+      likePatternsSet.add(`${s}#%`)
+      likePatternsSet.add(`${s}?%`)
+    }
+    const likePatterns = Array.from(likePatternsSet)
+    const whereParts: string[] = []
+    if (equalSlugs.length === 1) {
+      whereParts.push('post_slug = ?')
+    } else if (equalSlugs.length > 1) {
+      const placeholders = equalSlugs.map(() => '?').join(', ')
+      whereParts.push(`post_slug IN (${placeholders})`)
+    }
+    for (let i = 0; i < likePatterns.length; i += 1) {
+      whereParts.push('post_slug LIKE ?')
+    }
+    const whereClause =
+      whereParts.length > 0
+        ? `status = "approved" AND (${whereParts.join(' OR ')})`
+        : 'status = "approved"'
+    const query = `
+      SELECT id, name, email, url, content_text as contentText,
              content_html as contentHtml, created, parent_id as parentId,
              post_slug as postSlug, post_url as postUrl, priority, COALESCE(likes, 0) as likes
-      FROM Comment 
-      WHERE status = "approved" AND post_slug = ?
+      FROM Comment
+      WHERE ${whereClause}
       ORDER BY priority DESC, created DESC
     `
-    if (slugList.length > 1) {
-      const placeholders = slugList.map(() => '?').join(', ')
-      query = `
-        SELECT id, name, email, url, content_text as contentText, 
-               content_html as contentHtml, created, parent_id as parentId,
-               post_slug as postSlug, post_url as postUrl, priority, COALESCE(likes, 0) as likes
-        FROM Comment 
-        WHERE status = "approved" AND post_slug IN (${placeholders})
-        ORDER BY priority DESC, created DESC
-      `
-    }
+    const bindParams: unknown[] = [...equalSlugs, ...likePatterns]
     
     const [commentsResult, adminEmailRows] = await Promise.all([
-      c.env.CWD_DB.prepare(query).bind(...slugList).all(),
+      c.env.CWD_DB.prepare(query).bind(...bindParams).all(),
       c.env.CWD_DB.prepare('SELECT key, value FROM Settings WHERE key IN (?, ?)')
         .bind('comment_admin_email', 'admin_notify_email')
         .all<{ key: string; value: string }>()

@@ -37,11 +37,11 @@ export const getStats = async (c: Context<{ Bindings: Bindings }>) => {
 		const domainFilter = rawDomain.trim().toLowerCase();
 
 		const { results } = await c.env.CWD_DB.prepare(
-			'SELECT created, post_slug, url, status FROM Comment'
+			'SELECT created, post_slug, post_url, status FROM Comment'
 		).all<{
 			created: number;
 			post_slug: string;
-			url: string | null;
+			post_url: string | null;
 			status: string;
 		}>();
 
@@ -69,7 +69,7 @@ export const getStats = async (c: Context<{ Bindings: Bindings }>) => {
 
 		for (const row of results) {
 			const domain =
-				extractDomain(row.post_slug) || extractDomain(row.url) || 'unknown';
+				extractDomain(row.post_url) || extractDomain(row.post_slug) || 'unknown';
 
 			let counts = domainMap.get(domain);
 			if (!counts) {

@@ -263,6 +263,7 @@ const editForm = ref<{
   email: string;
   url: string;
   postSlug: string;
+  postUrl: string;
   contentText: string;
   status: string;
   priority: number;
@@ -438,6 +439,7 @@ function openEdit(item: CommentItem) {
     email: item.email,
     url: item.url || "",
     postSlug: item.postSlug || "",
+    postUrl: item.postUrl || "",
     contentText: item.contentText,
     status: item.status,
     priority:
@@ -466,6 +468,7 @@ async function submitEdit() {
   const trimmedContent = current.contentText.trim();
   const trimmedUrl = current.url.trim();
   const trimmedPostSlug = current.postSlug.trim();
+  const trimmedPostUrl = current.postUrl.trim();
   const priorityValue =
     typeof current.priority === "number" && Number.isFinite(current.priority)
       ? current.priority
@@ -485,6 +488,7 @@ async function submitEdit() {
       name: trimmedName,
       email: trimmedEmail,
       url: trimmedUrl || null,
+      postUrl: trimmedPostUrl || null,
       postSlug: newPostSlug,
       contentText: trimmedContent,
       status: current.status,
@@ -497,6 +501,7 @@ async function submitEdit() {
         email: trimmedEmail,
         url: trimmedUrl || null,
         postSlug: newPostSlug,
+        postUrl: trimmedPostUrl || null,
         contentText: trimmedContent,
         status: current.status,
         priority: priorityValue,

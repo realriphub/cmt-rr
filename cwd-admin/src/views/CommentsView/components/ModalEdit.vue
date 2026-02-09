@@ -16,8 +16,12 @@
           <input v-model="form.url" class="form-input" type="text" />
         </div>
         <div class="form-item">
-          <label class="form-label">评论地址</label>
+          <label class="form-label">页面标识</label>
           <input v-model="form.postSlug" class="form-input" type="text" />
+        </div>
+        <div class="form-item">
+          <label class="form-label">评论地址</label>
+          <input v-model="form.postUrl" class="form-input" type="text" />
         </div>
         <div class="form-item">
           <label class="form-label">评论内容</label>
@@ -66,6 +70,7 @@ interface EditForm {
   email: string;
   url: string;
   postSlug: string;
+  postUrl: string;
   contentText: string;
   status: string;
   priority: number;

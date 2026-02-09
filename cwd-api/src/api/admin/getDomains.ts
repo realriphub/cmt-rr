@@ -25,15 +25,15 @@ export const getDomains = async (c: Context<{ Bindings: Bindings }>) => {
 		const domains = new Set<string>();
 
 		const { results: commentRows } = await c.env.CWD_DB.prepare(
-			'SELECT post_slug, url FROM Comment'
+			'SELECT post_slug, post_url FROM Comment'
 		).all<{
 			post_slug: string;
-			url: string | null;
+			post_url: string | null;
 		}>();
 
 		for (const row of commentRows) {
 			const domain =
-				extractDomain(row.post_slug) || extractDomain(row.url);
+				extractDomain(row.post_url) || extractDomain(row.post_slug);
 			if (domain) {
 				domains.add(domain);
 			}

@@ -25,10 +25,16 @@ export const updateComment = async (c: Context<{ Bindings: Bindings }>) => {
   }
 
   const existing = await c.env.CWD_DB.prepare(
-    'SELECT id, status, post_slug, priority FROM Comment WHERE id = ?'
+    'SELECT id, status, post_slug, post_url, priority FROM Comment WHERE id = ?'
   )
     .bind(id)
-    .first<{ id: number; status: string; post_slug: string; priority: number | null }>();
+    .first<{
+      id: number;
+      status: string;
+      post_slug: string;
+      post_url: string | null;
+      priority: number | null;
+    }>();
 
   if (!existing) {
     return c.json({ message: 'Comment not found' }, 404);
@@ -48,6 +54,15 @@ export const updateComment = async (c: Context<{ Bindings: Bindings }>) => {
       : typeof body.post_slug === 'string'
       ? body.post_slug
       : '';
+  const hasPostUrlField =
+    Object.prototype.hasOwnProperty.call(body, 'postUrl') ||
+    Object.prototype.hasOwnProperty.call(body, 'post_url');
+  const rawPostUrl =
+    typeof body.postUrl === 'string'
+      ? body.postUrl
+      : typeof body.post_url === 'string'
+      ? body.post_url
+      : '';
 
   const contentSource =
     typeof body.content === 'string'
@@ -63,6 +78,9 @@ export const updateComment = async (c: Context<{ Bindings: Bindings }>) => {
   const postSlug = hasPostSlugField
     ? (rawPostSlug.trim() || existing.post_slug)
     : existing.post_slug;
+  const postUrl = hasPostUrlField
+    ? (rawPostUrl.trim() || null)
+    : existing.post_url;
 
   let priority: number = typeof existing.priority === 'number' && Number.isFinite(existing.priority)
     ? existing.priority
@@ -107,9 +125,9 @@ export const updateComment = async (c: Context<{ Bindings: Bindings }>) => {
   });
 
   const { success } = await c.env.CWD_DB.prepare(
-    'UPDATE Comment SET name = ?, email = ?, url = ?, content_text = ?, content_html = ?, status = ?, post_slug = ?, priority = ? WHERE id = ?'
+    'UPDATE Comment SET name = ?, email = ?, url = ?, content_text = ?, content_html = ?, status = ?, post_slug = ?, post_url = ?, priority = ? WHERE id = ?'
   )
-    .bind(name, email, url, contentText, contentHtml, status, postSlug, priority, id)
+    .bind(name, email, url, contentText, contentHtml, status, postSlug, postUrl, priority, id)
     .run();
 
   if (!success) {

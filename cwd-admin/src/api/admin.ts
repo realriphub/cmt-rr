@@ -13,6 +13,7 @@ export type CommentItem = {
 	email: string;
 	avatar: string;
 	postSlug: string;
+	postUrl: string | null;
 	url: string | null;
 	ipAddress: string | null;
 	contentText: string;
@@ -172,6 +173,7 @@ export function updateComment(data: {
 	name: string;
 	email: string;
 	url?: string | null;
+	postUrl?: string | null;
 	postSlug?: string;
 	contentText: string;
 	status?: string;
@@ -182,6 +184,7 @@ export function updateComment(data: {
 		name: data.name,
 		email: data.email,
 		url: data.url ?? null,
+		postUrl: data.postUrl ?? null,
 		postSlug: data.postSlug,
 		content: data.contentText,
 		status: data.status,

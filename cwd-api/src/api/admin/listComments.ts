@@ -17,7 +17,7 @@ export const listComments = async (c: Context<{ Bindings: Bindings }>) => {
 	const params: (string | number)[] = [];
 	if (domain) {
 		const pattern = `%://${domain}/%`;
-		whereSql = 'WHERE post_slug LIKE ? OR url LIKE ?';
+		whereSql = 'WHERE post_slug LIKE ? OR post_url LIKE ?';
 		params.push(pattern, pattern);
 	}
 
