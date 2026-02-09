@@ -12,31 +12,12 @@ type DomainCounts = StatusCounts & {
 	domain: string;
 };
 
-function extractDomain(source: string | null | undefined): string | null {
-	if (!source) {
-		return null;
-	}
-	const value = source.trim();
-	if (!value) {
-		return null;
-	}
-	if (!/^https?:\/\//i.test(value)) {
-		return null;
-	}
-	try {
-		const url = new URL(value);
-		return url.hostname.toLowerCase();
-	} catch {
-		return null;
-	}
-}
-
 export const getStats = async (c: Context<{ Bindings: Bindings }>) => {
 	try {
 		const rawSiteId = c.req.query('siteId');
 		const siteId = rawSiteId && rawSiteId !== 'default' ? rawSiteId : null;
 
-		let sql = 'SELECT created, post_slug, post_url, status FROM Comment';
+		let sql = 'SELECT created, status, site_id FROM Comment';
 		const params: any[] = [];
 
 		if (siteId) {
@@ -46,9 +27,8 @@ export const getStats = async (c: Context<{ Bindings: Bindings }>) => {
 
 		const { results } = await c.env.CWD_DB.prepare(sql).bind(...params).all<{
 			created: number;
-			post_slug: string;
-			post_url: string | null;
 			status: string;
+			site_id: string | null;
 		}>();
 
 		const summary: StatusCounts = {
@@ -65,10 +45,9 @@ export const getStats = async (c: Context<{ Bindings: Bindings }>) => {
 		const thirtyDaysAgo = now - 29 * 24 * 60 * 60 * 1000;
 
 		for (const row of results) {
-			const domain =
-				extractDomain(row.post_url) || extractDomain(row.post_slug) || 'unknown';
+			const domainKey = row.site_id && row.site_id.trim() ? row.site_id.trim() : 'default';
 
-			let counts = domainMap.get(domain);
+			let counts = domainMap.get(domainKey);
 			if (!counts) {
 				counts = {
 					total: 0,
@@ -76,7 +55,7 @@ export const getStats = async (c: Context<{ Bindings: Bindings }>) => {
 					pending: 0,
 					rejected: 0
 				};
-				domainMap.set(domain, counts);
+				domainMap.set(domainKey, counts);
 			}
 			counts.total += 1;
 			if (row.status === 'approved') {
