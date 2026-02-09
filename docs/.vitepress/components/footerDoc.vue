@@ -3,12 +3,12 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, onBeforeUnmount, ref, watch } from "vue";
 import { useData } from "vitepress";
 
 const commentsRoot = ref(null);
 const commentsInstance = ref(null);
-const { isDark } = useData();
+const { isDark, page } = useData();
 
 const getTheme = () => (isDark.value ? "dark" : "light");
 
@@ -53,5 +53,21 @@ onMounted(async () => {
     },
     { immediate: false }
   );
+
+  watch(
+    () => page.value.relativePath,
+    () => {
+      if (!commentsInstance.value) return;
+      commentsInstance.value.updateConfig({});
+    },
+    { immediate: false }
+  );
+});
+
+onBeforeUnmount(() => {
+  if (commentsInstance.value) {
+    commentsInstance.value.unmount();
+    commentsInstance.value = null;
+  }
 });
 </script>

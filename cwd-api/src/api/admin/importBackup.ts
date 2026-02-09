@@ -24,32 +24,34 @@ const saveComments = async (env: Bindings, comments: any[]) => {
             content_text,
             content_html,
             parent_id,
-            status,
-            likes
-        } = comment;
+				status,
+				likes,
+				site_id
+			} = comment;
 
-        const fields = [
-            'created', 'post_slug', 'name', 'email', 'url',
-            'ip_address', 'device', 'os', 'browser', 'ua',
-            'content_text', 'content_html', 'parent_id', 'status', 'likes'
-        ];
-        const values = [
-            created || Date.now(),
-            post_slug || "",
-            name || "Anonymous",
-            email || "",
-            url || null,
-            ip_address || null,
-            device || null,
-            os || null,
-            browser || null,
-            ua || null,
-            content_text || "",
-            content_html || "",
-            parent_id || null,
-            status || "approved",
-            typeof likes === 'number' && Number.isFinite(likes) && likes >= 0 ? likes : 0
-        ];
+            const fields = [
+                'created', 'post_slug', 'name', 'email', 'url',
+                'ip_address', 'device', 'os', 'browser', 'ua',
+                'content_text', 'content_html', 'parent_id', 'status', 'likes', 'site_id'
+            ];
+            const values = [
+                created || Date.now(),
+                post_slug || "",
+                name || "Anonymous",
+                email || "",
+                url || null,
+                ip_address || null,
+                device || null,
+                os || null,
+                browser || null,
+                ua || null,
+                content_text || "",
+                content_html || "",
+                parent_id || null,
+                status || "approved",
+                typeof likes === 'number' && Number.isFinite(likes) && likes >= 0 ? likes : 0,
+                site_id || ""
+            ];
 
         if (id !== undefined && id !== null) {
             fields.unshift('id');

@@ -263,13 +263,8 @@ export function blockEmail(email: string): Promise<{ message: string }> {
 	return post<{ message: string }>('/admin/comments/block-email', { email });
 }
 
-export function exportComments(siteId?: string): Promise<any[]> {
-	const searchParams = new URLSearchParams();
-	if (siteId && siteId !== 'default') {
-		searchParams.set('siteId', siteId);
-	}
-	const query = searchParams.toString();
-	return get<any[]>(query ? `/admin/comments/export?${query}` : '/admin/comments/export');
+export function exportComments(): Promise<any[]> {
+	return get<any[]>('/admin/comments/export');
 }
 
 export function importComments(data: any[]): Promise<{ message: string }> {

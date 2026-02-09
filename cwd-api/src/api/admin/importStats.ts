@@ -3,15 +3,15 @@ import { Bindings } from '../../bindings';
 
 async function ensureStatsTables(env: Bindings) {
 	await env.CWD_DB.prepare(
-		'CREATE TABLE IF NOT EXISTS page_stats (id INTEGER PRIMARY KEY AUTOINCREMENT, post_slug TEXT UNIQUE NOT NULL, post_title TEXT, post_url TEXT, pv INTEGER NOT NULL DEFAULT 0, last_visit_at INTEGER, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL)'
+		'CREATE TABLE IF NOT EXISTS page_stats (id INTEGER PRIMARY KEY AUTOINCREMENT, site_id TEXT NOT NULL DEFAULT "", post_slug TEXT NOT NULL, post_title TEXT, post_url TEXT, pv INTEGER NOT NULL DEFAULT 0, last_visit_at INTEGER, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL, UNIQUE(site_id, post_slug))'
 	).run();
 
 	await env.CWD_DB.prepare(
-		'CREATE TABLE IF NOT EXISTS page_visit_daily (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, domain TEXT, count INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL)'
+		'CREATE TABLE IF NOT EXISTS page_visit_daily (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT NOT NULL, domain TEXT, count INTEGER NOT NULL DEFAULT 0, created_at INTEGER NOT NULL, updated_at INTEGER NOT NULL, site_id TEXT NOT NULL DEFAULT "")'
 	).run();
 
 	await env.CWD_DB.prepare(
-		'CREATE TABLE IF NOT EXISTS Likes (id INTEGER PRIMARY KEY AUTOINCREMENT, page_slug TEXT NOT NULL, user_id TEXT NOT NULL, created_at INTEGER NOT NULL, UNIQUE(page_slug, user_id))'
+		'CREATE TABLE IF NOT EXISTS Likes (id INTEGER PRIMARY KEY AUTOINCREMENT, site_id TEXT NOT NULL DEFAULT "", page_slug TEXT NOT NULL, user_id TEXT NOT NULL, created_at INTEGER NOT NULL, UNIQUE(site_id, page_slug, user_id))'
 	).run();
 }
 
@@ -29,7 +29,8 @@ export const saveStatsData = async (env: Bindings, data: any) => {
 				'pv',
 				'last_visit_at',
 				'created_at',
-				'updated_at'
+				'updated_at',
+				'site_id'
 			];
 			const values = [
 				item.post_slug,
@@ -38,7 +39,8 @@ export const saveStatsData = async (env: Bindings, data: any) => {
 				item.pv,
 				item.last_visit_at,
 				item.created_at,
-				item.updated_at
+				item.updated_at,
+				item.site_id || ""
 			];
 			if (item.id) {
 				fields.unshift('id');
@@ -55,8 +57,8 @@ export const saveStatsData = async (env: Bindings, data: any) => {
 
 	if (Array.isArray(data.page_visit_daily)) {
 		for (const item of data.page_visit_daily) {
-			const fields = ['date', 'domain', 'count', 'created_at', 'updated_at'];
-			const values = [item.date, item.domain, item.count, item.created_at, item.updated_at];
+			const fields = ['date', 'domain', 'count', 'created_at', 'updated_at', 'site_id'];
+			const values = [item.date, item.domain, item.count, item.created_at, item.updated_at, item.site_id || ""];
 			if (item.id) {
 				fields.unshift('id');
 				values.unshift(item.id);
@@ -72,8 +74,8 @@ export const saveStatsData = async (env: Bindings, data: any) => {
 
 	if (Array.isArray(data.likes)) {
 		for (const item of data.likes) {
-			const fields = ['page_slug', 'user_id', 'created_at'];
-			const values = [item.page_slug, item.user_id, item.created_at];
+			const fields = ['page_slug', 'user_id', 'created_at', 'site_id'];
+			const values = [item.page_slug, item.user_id, item.created_at, item.site_id || ""];
 			if (item.id) {
 				fields.unshift('id');
 				values.unshift(item.id);

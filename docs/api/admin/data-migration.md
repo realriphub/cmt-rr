@@ -109,7 +109,12 @@ POST /admin/comments/import
 说明：
 
 - 若从 CWD 自身导出的评论数据进行恢复，可直接将 `/admin/comments/export` 接口导出的 JSON 原样提交到本接口；
-- 若从 Twikoo / Artalk 等其他评论系统迁移数据，可通过管理后台「评论数据导入」功能上传对应的 JSON 文件，前端会自动转换为上述结构后调用本接口。
+- 若从 **Twikoo** / **Artalk** 等其他评论系统迁移数据，本接口会自动识别并转换数据格式：
+  - **Twikoo**: 自动映射 `nick` → `name`, `mail` → `email`, `href` → `post_slug`, `comment` → `content_text` 等字段
+  - **Artalk**: 自动映射 `nick` → `name`, `page_key` → `post_slug`, `content` → `content_text` 等字段
+  - 时间字段自动转换为时间戳格式
+  - 非数字 ID 会自动丢弃，由数据库重新生成自增 ID
+- 数据导入采用 `INSERT OR REPLACE` 策略，若提供 `id` 字段且存在则会覆盖原有数据
 
 **成功响应**
 
