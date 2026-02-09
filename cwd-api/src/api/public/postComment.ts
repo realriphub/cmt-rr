@@ -159,13 +159,14 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
   try {
     const result = await c.env.CWD_DB.prepare(`
       INSERT INTO Comment (
-        created, post_slug, name, email, url, ip_address, 
+        created, post_slug, post_url, name, email, url, ip_address, 
         os, browser, device, ua, content_text, content_html, 
         parent_id, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       Date.now(),
       post_slug,
+      post_url || null,
       name,
       email,
       url || null,

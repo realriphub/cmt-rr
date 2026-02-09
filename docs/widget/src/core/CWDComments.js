@@ -30,7 +30,7 @@ export class CWDComments {
 	constructor(config) {
 		this.config = { ...config };
 		if (typeof window !== 'undefined') {
-			this.config.postSlug = window.location.origin + window.location.pathname;
+			this.config.postSlug = window.location.pathname;
 		}
 		if (typeof document !== 'undefined') {
 			this.config.postTitle = document.title || this.config.postSlug;
@@ -572,7 +572,7 @@ export class CWDComments {
 
 		Object.assign(this.config, newConfig);
 		if (typeof window !== 'undefined') {
-			this.config.postSlug = window.location.origin + window.location.pathname;
+			this.config.postSlug = window.location.pathname;
 		}
 		if (typeof document !== 'undefined') {
 			this.config.postTitle = document.title || this.config.postSlug;
