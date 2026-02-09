@@ -30,6 +30,7 @@
     h1 {
       margin-bottom: 20px;
       color: #333;
+      font-size: 1.4rem;
     }
 
     .config-panel {
@@ -132,6 +133,10 @@
       <div class="config-item">
         <label>Site ID（可选，用于隔离不同站点/环境的评论）</label>
         <input type="text" id="siteId" placeholder="例如：blog、dev、zishu.me" />
+      </div>
+      <div class="config-item">
+        <label>自定义 postSlug（可选，留空则使用当前路径）</label>
+        <input type="text" id="postSlug" placeholder="例如：post-unique-id-001，用于多语言/多路径聚合" />
       </div>
       <div class="config-item">
         <label>主题</label>

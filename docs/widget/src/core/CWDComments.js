@@ -32,7 +32,7 @@ export class CWDComments {
 		if (config.siteId) {
 			this.config.siteId = config.siteId;
 		}
-		if (typeof window !== 'undefined') {
+		if (typeof window !== 'undefined' && !this.config.postSlug) {
 			this.config.postSlug = window.location.pathname;
 		}
 		if (typeof document !== 'undefined') {
@@ -577,7 +577,7 @@ export class CWDComments {
 		if (newConfig.siteId !== undefined) {
 			this.config.siteId = newConfig.siteId;
 		}
-		if (typeof window !== 'undefined') {
+		if (typeof window !== 'undefined' && !this.config.postSlug) {
 			this.config.postSlug = window.location.pathname;
 		}
 		if (typeof document !== 'undefined') {

@@ -26,15 +26,21 @@ CWD 评论组件采用 **Shadow DOM** 技术构建，基于独立根节点渲染
 
 <script>
 	const comments = new CWDComments({
-		el: '#comments',
-		apiBaseUrl: 'https://your-api.example.com', // 换成你的 API 地址
-		siteId: 'blog', // 换成你的站点 ID（可选），如需多站点隔离请配置
+		el: '#comments', // 必填
+		apiBaseUrl: 'https://your-api.example.com', // 必填，换成你的 API 地址
+		postSlug: 'post-unique-id-001', // 选填，自定义评论标识符，用于跨路径/多语言聚合
+		siteId: 'blog', // 选填，推荐配置，用于多站点数据隔离。
+
 	});
 	comments.mount();
 </script>
 ```
 
-**cdn 链接（推荐使用）**
+如果你的站点是多语言结构（例如 `/en/post/1` 和 `/zh/post/1`），或者是不同路径需要共享同一份评论数据，可以通过 `postSlug` 参数手动指定唯一的标识符；
+
+如果未指定 `postSlug`，组件将默认使用 `window.location.pathname` 作为标识符。
+
+**cdn 链接（推荐使用）：请单独修改版本号** 
 
 ```
 https://unpkg.com/cwd-widget@0.0.x/dist/cwd.js
@@ -48,14 +54,15 @@ https://cwd.js.org/cwd.js
 
 ### 参数说明
 
-| 参数           | 类型                    | 必填 | 默认值 | 说明                                     |
-| -------------- | ----------------------- | ---- | ------ | ---------------------------------------- |
-| `el`           | `string \| HTMLElement` | 是   | -      | 挂载元素选择器或 DOM 元素                |
-| `apiBaseUrl`   | `string`                | 是   | -      | API 基础地址                             |
-| `siteId`       | `string`                | 否   | `''`   | 站点 ID，用于多站点数据隔离              |
-| `theme`        | `'light' \| 'dark'`     | 否   | `'light'` | 主题模式                                 |
-| `pageSize`     | `number`                | 否   | `20`   | 每页显示评论数                           |
-| `customCssUrl` | `string`                | 否   | -      | 自定义样式表 URL，追加到 Shadow DOM 底部 |
+| 参数           | 类型                    | 必填 | 默认值                     | 说明                                     |
+| -------------- | ----------------------- | ---- | -------------------------- | ---------------------------------------- |
+| `el`           | `string \| HTMLElement` | 是   | -                          | 挂载元素选择器或 DOM 元素                |
+| `apiBaseUrl`   | `string`                | 是   | -                          | API 基础地址                             |
+| `siteId`       | `string`                | 否   | `''`                       | 站点 ID，用于多站点数据隔离，推荐配置    |
+| `postSlug`     | `string`                | 否   | `window.location.pathname` | 自定义评论标识符，用于跨路径/多语言聚合  |
+| `theme`        | `'light' \| 'dark'`     | 否   | `'light'`                  | 主题模式                                 |
+| `pageSize`     | `number`                | 否   | `20`                       | 每页显示评论数                           |
+| `customCssUrl` | `string`                | 否   | -                          | 自定义样式表 URL，追加到 Shadow DOM 底部 |
 
 头像前缀、博主邮箱和标识等信息由后端接口 `/api/config/comments` 提供，无需在前端进行配置。
 
@@ -81,6 +88,9 @@ https://cwd.js.org/cwd.js
 ```javascript
 // 动态切换主题
 comments.updateConfig({ theme: 'dark' });
+
+// 动态修改评论标识符（适用于单页应用路由切换）
+comments.updateConfig({ postSlug: '/new-post-slug' });
 
 // 配置自定义样式（会以 <link> 形式注入到 Shadow DOM 底部）
 comments.updateConfig({

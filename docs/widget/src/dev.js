@@ -13,6 +13,7 @@ const DEFAULT_CONFIG = {
 	apiBaseUrl: 'http://localhost:8788',
 	siteId: 'cwd-dev-config',
 	theme: 'light', // 默认 light / dark
+	postSlug: '',
 };
 
 let widgetInstance = null;
@@ -49,11 +50,13 @@ function populateInputs(config) {
 	const themeSelect = document.getElementById('theme');
 	const avatarPrefixInput = document.getElementById('avatarPrefix');
 	const siteIdInput = document.getElementById('siteId');
+	const postSlugInput = document.getElementById('postSlug');
 
 	if (apiBaseUrlInput) apiBaseUrlInput.value = config.apiBaseUrl || DEFAULT_CONFIG.apiBaseUrl;
 	if (themeSelect) themeSelect.value = config.theme || DEFAULT_CONFIG.theme;
 	if (avatarPrefixInput) avatarPrefixInput.value = config.avatarPrefix || DEFAULT_CONFIG.avatarPrefix;
 	if (siteIdInput) siteIdInput.value = config.siteId || DEFAULT_CONFIG.siteId || '';
+	if (postSlugInput) postSlugInput.value = config.postSlug || DEFAULT_CONFIG.postSlug || '';
 }
 
 /**
@@ -63,7 +66,8 @@ function getConfigFromInputs() {
 	const apiBaseUrl = document.getElementById('apiBaseUrl')?.value || DEFAULT_CONFIG.apiBaseUrl;
 	const theme = document.getElementById('theme')?.value || DEFAULT_CONFIG.theme;
 	const siteId = document.getElementById('siteId')?.value || DEFAULT_CONFIG.siteId || '';
-	return { apiBaseUrl, theme, siteId };
+	const postSlug = document.getElementById('postSlug')?.value || DEFAULT_CONFIG.postSlug || '';
+	return { apiBaseUrl, theme, siteId, postSlug };
 }
 
 /**
@@ -93,6 +97,7 @@ async function initWidget() {
 			el: '#comments',
 			apiBaseUrl: config.apiBaseUrl,
 			siteId: config.siteId,
+			postSlug: config.postSlug,
 		});
 		widgetInstance.mount();
 	} catch (error) {}
@@ -153,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 监听输入框变化，实时保存
 document.addEventListener('DOMContentLoaded', () => {
-	const inputs = ['apiBaseUrl', 'theme', 'siteId'];
+	const inputs = ['apiBaseUrl', 'theme', 'siteId', 'postSlug'];
 	inputs.forEach((id) => {
 		const element = document.getElementById(id);
 		if (element) {
