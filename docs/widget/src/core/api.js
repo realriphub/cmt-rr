@@ -139,7 +139,7 @@ export function createApiClient(config) {
 
     async function getLikeStatus() {
         const params = new URLSearchParams({
-            post_slug: config.postSlug
+            post_slug: config.postUrl
         });
         const headers = {
             'X-CWD-Like-User': getLikeUserId()
