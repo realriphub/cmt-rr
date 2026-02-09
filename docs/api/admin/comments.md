@@ -30,7 +30,7 @@ GET /admin/comments/list
 说明：
 
 - 当前实现中每页固定大小为 `10`，暂不支持 `pageSize` 或状态过滤；
-- 当提供 `domain` 参数时，会匹配该域名下的评论，例如 `https://example.com/...`、`http://example.com/...`。
+- 当提供 `siteId` 参数且不为 `default` 时，仅返回该站点下的评论。
 
 **成功响应**
 

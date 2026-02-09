@@ -39,6 +39,8 @@ CWD 评论系统支持通过 `siteId` 参数实现多站点数据隔离。当你
 
 ## API 调用
 
+### 公开 API
+
 当使用站点隔离功能时，所有公开 API 请求都需要在查询参数中携带 `siteId`：
 
 ```javascript
@@ -58,6 +60,38 @@ POST /api/comments
 // 获取配置
 GET /api/config/comments?siteId=blog
 ```
+
+### 管理后台 API
+
+管理后台同样支持通过 `siteId` 参数进行数据筛选：
+
+```javascript
+// 获取评论列表
+GET /admin/comments/list?siteId=blog
+
+// 导出评论数据
+GET /admin/comments/export?siteId=blog
+
+// 获取评论统计数据
+GET /admin/stats/comments?siteId=blog
+
+// 获取访问统计概览
+GET /admin/analytics/overview?siteId=blog
+
+// 获取页面访问统计
+GET /admin/analytics/pages?siteId=blog
+
+// 获取点赞统计数据
+GET /admin/likes/stats?siteId=blog
+
+// 导出统计数据
+GET /admin/export/stats?siteId=blog
+```
+
+说明：
+
+- 当提供 `siteId` 参数且不为 `default` 时，接口仅返回该站点下的数据
+- 不提供 `siteId` 参数时，返回所有站点的数据
 
 ## 多站点示例
 

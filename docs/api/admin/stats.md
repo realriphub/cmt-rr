@@ -1,6 +1,6 @@
 # 统计数据
 
-统计数据接口用于获取评论统计、域名列表等数据看板相关信息。
+统计数据接口用于获取评论统计、站点列表等数据看板相关信息。
 
 所有接口都需要在请求头中携带 Bearer Token。
 
@@ -80,12 +80,12 @@ GET /admin/stats/comments
 | `summary.approved`   | number              | 已通过评论数                          |
 | `summary.pending`    | number              | 待审核评论数                          |
 | `summary.rejected`   | number              | 已拒绝评论数                          |
-| `domains`            | Array\<DomainStat\> | 按域名聚合的评论统计列表              |
-| `domains[].domain`   | string              | 解析后的域名（如 `example.com`）      |
-| `domains[].total`    | number              | 该域名下评论总数                      |
-| `domains[].approved` | number              | 该域名下已通过评论数                  |
-| `domains[].pending`  | number              | 该域名下待审核评论数                  |
-| `domains[].rejected` | number              | 该域名下已拒绝评论数                  |
+| `domains`            | Array\<DomainStat\> | 按站点聚合的评论统计列表              |
+| `domains[].domain`   | string              | 站点 ID（如 `blog`、`docs` 或 `default`） |
+| `domains[].total`    | number              | 该站点下评论总数                      |
+| `domains[].approved` | number              | 该站点下已通过评论数                  |
+| `domains[].pending`  | number              | 该站点下待审核评论数                  |
+| `domains[].rejected` | number              | 该站点下已拒绝评论数                  |
 | `last7Days`          | Array\<DailyStat\>  | 最近 30 天的每日评论数（按自然日聚合） |
 | `last7Days[].date`   | string (YYYY-MM-DD) | 日期，UTC 时间格式化后的自然日        |
 | `last7Days[].total`  | number              | 当日评论总数                          |

@@ -14,11 +14,22 @@ Authorization: Bearer <token>
 GET /admin/comments/export
 ```
 
-导出所有评论数据，返回格式为 JSON，字段与数据库结构一致。
+导出评论数据，返回格式为 JSON，字段与数据库结构一致。
 
 - 方法：`GET`
 - 路径：`/admin/comments/export`
 - 鉴权：需要（Bearer Token）
+
+**查询参数**
+
+| 名称     | 位置  | 类型   | 必填 | 说明                            |
+| -------- | ----- | ------ | ---- | ------------------------------- |
+| `siteId` | query | string | 否   | 按站点 ID 筛选导出的评论数据，如 `blog`、`docs` |
+
+说明：
+
+- 当提供 `siteId` 参数且不为 `default` 时，仅导出该站点下的评论数据
+- 不提供 `siteId` 参数时，导出所有评论数据
 
 **成功响应**
 
@@ -248,6 +259,17 @@ GET /admin/export/stats
 - 方法：`GET`
 - 路径：`/admin/export/stats`
 - 鉴权：需要（Bearer Token）
+
+**查询参数**
+
+| 名称     | 位置  | 类型   | 必填 | 说明                            |
+| -------- | ----- | ------ | ---- | ------------------------------- |
+| `siteId` | query | string | 否   | 按站点 ID 筛选导出的统计数据，如 `blog`、`docs` |
+
+说明：
+
+- 当提供 `siteId` 参数且不为 `default` 时，仅导出该站点下的统计数据（包括页面访问汇总、按日访问明细以及点赞明细）
+- 不提供 `siteId` 参数时，导出所有站点的统计数据
 
 **成功响应**
 
