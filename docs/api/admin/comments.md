@@ -25,7 +25,7 @@ GET /admin/comments/list
 | 名称     | 位置  | 类型    | 必填 | 说明                                       |
 | -------- | ----- | ------- | ---- | ------------------------------------------ |
 | `page`   | query | integer | 否   | 页码，默认 `1`                             |
-| `domain` | query | string  | 否   | 按域名筛选评论，传入域名，如 `example.com` |
+| `siteId` | query | string  | 否   | 按站点 ID 筛选评论，如 `blog`、`docs`     |
 
 说明：
 

@@ -102,7 +102,7 @@ GET /admin/analytics/pages
 
 | 名称     | 位置  | 类型   | 必填 | 说明                                       |
 | -------- | ----- | ------ | ---- | ------------------------------------------ |
-| `domain` | query | string | 否   | 按域名筛选访问数据，传入域名，如 `example.com` |
+| `siteId` | query | string | 否   | 按站点 ID 筛选访问数据，如 `blog`、`docs` |
 | `order`  | query | string | 否   | 排序方式，`pv`（按访问量排序，默认）或 `latest`（最新访问） |
 
 说明：
