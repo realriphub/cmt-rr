@@ -39,17 +39,11 @@ function findDatabaseName() {
 
 function run() {
 	try {
-		console.log('🔍 [Auto-Migrate] Detecting D1 database...');
 		const dbName = findDatabaseName();
 		if (!dbName) {
-			console.warn('⚠️ [Auto-Migrate] Could not detect database_name from wrangler config. Skipping.');
 			return;
 		}
-        console.log(`✅ [Auto-Migrate] Found database: ${dbName}`);
-
-        console.log('🔍 [Auto-Migrate] Checking schema status...');
         try {
-            // Check if post_url column exists
             const checkCmd = `npx wrangler d1 execute ${dbName} --command "SELECT count(*) as count FROM pragma_table_info('Comment') WHERE name='post_url'" --remote --json`;
             const output = execSync(checkCmd, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] });
             
@@ -57,16 +51,12 @@ function run() {
             const count = result[0]?.results?.[0]?.count;
             
             if (count > 0) {
-                console.log('✅ [Auto-Migrate] Schema is up to date.');
                 return;
             }
         } catch (e) {
-            console.warn('⚠️ [Auto-Migrate] Check failed (Database might be new or network error). Skipping migration to be safe.');
-            console.warn(e.message);
             return;
         }
 
-        console.log('🚀 [Auto-Migrate] Applying migration...');
         const sql = `
             ALTER TABLE Comment ADD COLUMN post_url TEXT;
             UPDATE Comment SET post_url = post_slug;
@@ -82,10 +72,10 @@ function run() {
         const migrateCmd = `npx wrangler d1 execute ${dbName} --command "${flatSql}" --remote --yes`;
         
         execSync(migrateCmd, { stdio: 'inherit' });
-        console.log('✅ [Auto-Migrate] Completed successfully.');
+        console.log('[Auto-Migrate] Migration applied for Comment.post_url.');
 
     } catch (error) {
-        console.error('❌ [Auto-Migrate] Failed:', error.message);
+        console.error('[Auto-Migrate] Failed:', error.message);
         process.exit(1);
     }
 }

@@ -89,7 +89,9 @@
               target="_blank"
               class="cell-path"
               :title="item.postSlug"
-              >{{ item.postSlug }}</a
+              >
+              {{ item.postUrl || item.postSlug }}
+              </a
             >
           </div>
           <div class="table-cell table-cell-status">

@@ -36,7 +36,7 @@ export const getComments = async (c: Context<{ Bindings: Bindings }>) => {
     let query = `
       SELECT id, name, email, url, content_text as contentText, 
              content_html as contentHtml, created, parent_id as parentId,
-             post_slug as postSlug, priority, COALESCE(likes, 0) as likes
+             post_slug as postSlug, post_url as postUrl, priority, COALESCE(likes, 0) as likes
       FROM Comment 
       WHERE status = "approved" AND post_slug = ?
       ORDER BY priority DESC, created DESC
@@ -46,7 +46,7 @@ export const getComments = async (c: Context<{ Bindings: Bindings }>) => {
       query = `
         SELECT id, name, email, url, content_text as contentText, 
                content_html as contentHtml, created, parent_id as parentId,
-               post_slug as postSlug, priority, COALESCE(likes, 0) as likes
+               post_slug as postSlug, post_url as postUrl, priority, COALESCE(likes, 0) as likes
         FROM Comment 
         WHERE status = "approved" AND post_slug IN (${placeholders})
         ORDER BY priority DESC, created DESC

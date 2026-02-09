@@ -188,7 +188,6 @@ export class CWDComments {
 					: this.config.commentPlaceholder;
 
 			const api = createApiClient(this.config);
-			console.log(this.config)
 			this.api = api;
 			if (this.hostElement && this.mountPoint) {
         this.store = createCommentStore(
