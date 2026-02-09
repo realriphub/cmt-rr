@@ -50,29 +50,50 @@ function run() {
             const result = JSON.parse(output);
             const count = result[0]?.results?.[0]?.count;
             
-            if (count > 0) {
-                return;
+            if (count === 0) {
+                const sql = `
+                    ALTER TABLE Comment ADD COLUMN post_url TEXT;
+                    UPDATE Comment SET post_url = post_slug;
+                    UPDATE Comment 
+                    SET post_slug = SUBSTR(
+                      REPLACE(REPLACE(post_slug, 'https://', ''), 'http://', ''),
+                      INSTR(REPLACE(REPLACE(post_slug, 'https://', ''), 'http://', ''), '/')
+                    )
+                    WHERE post_slug LIKE 'http%' AND INSTR(REPLACE(REPLACE(post_slug, 'https://', ''), 'http://', ''), '/') > 0;
+                `;
+                
+                const flatSql = sql.replace(/\s+/g, ' ').trim();
+                const migrateCmd = `npx wrangler d1 execute ${dbName} --command "${flatSql}" --remote --yes`;
+                
+                execSync(migrateCmd, { stdio: 'inherit' });
+                console.log('[Auto-Migrate] Migration applied for Comment.post_url.');
             }
         } catch (e) {
-            return;
+            console.error('[Auto-Migrate] Failed post_url migration:', e.message);
         }
 
-        const sql = `
-            ALTER TABLE Comment ADD COLUMN post_url TEXT;
-            UPDATE Comment SET post_url = post_slug;
-            UPDATE Comment 
-            SET post_slug = SUBSTR(
-              REPLACE(REPLACE(post_slug, 'https://', ''), 'http://', ''),
-              INSTR(REPLACE(REPLACE(post_slug, 'https://', ''), 'http://', ''), '/')
-            )
-            WHERE post_slug LIKE 'http%' AND INSTR(REPLACE(REPLACE(post_slug, 'https://', ''), 'http://', ''), '/') > 0;
-        `;
-        
-        const flatSql = sql.replace(/\s+/g, ' ').trim();
-        const migrateCmd = `npx wrangler d1 execute ${dbName} --command "${flatSql}" --remote --yes`;
-        
-        execSync(migrateCmd, { stdio: 'inherit' });
-        console.log('[Auto-Migrate] Migration applied for Comment.post_url.');
+        try {
+            const checkCmd = `npx wrangler d1 execute ${dbName} --command "SELECT count(*) as count FROM pragma_table_info('Comment') WHERE name='site_id'" --remote --json`;
+            const output = execSync(checkCmd, { encoding: 'utf-8', stdio: ['ignore', 'pipe', 'ignore'] });
+            
+            const result = JSON.parse(output);
+            const count = result[0]?.results?.[0]?.count;
+            
+            if (count === 0) {
+                const sql = `
+                    ALTER TABLE Comment ADD COLUMN site_id TEXT NOT NULL DEFAULT '';
+                    CREATE INDEX IF NOT EXISTS idx_site_id ON Comment(site_id);
+                `;
+                
+                const flatSql = sql.replace(/\s+/g, ' ').trim();
+                const migrateCmd = `npx wrangler d1 execute ${dbName} --command "${flatSql}" --remote --yes`;
+                
+                execSync(migrateCmd, { stdio: 'inherit' });
+                console.log('[Auto-Migrate] Migration applied for Comment.site_id.');
+            }
+        } catch (e) {
+            console.error('[Auto-Migrate] Failed site_id migration:', e.message);
+        }
 
     } catch (error) {
         console.error('[Auto-Migrate] Failed:', error.message);

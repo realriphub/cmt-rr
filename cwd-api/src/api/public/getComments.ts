@@ -9,6 +9,7 @@ export const getComments = async (c: Context<{ Bindings: Bindings }>) => {
   const limit = Math.min(parseInt(c.req.query('limit') || '20'), 50)
   const nested = c.req.query('nested') !== 'false'
   const avatar_prefix = c.req.query('avatar_prefix')
+  const siteId = c.req.query('site_id')
   const offset = (page - 1) * limit
 
   if (!postSlug) return c.json({ message: "post_slug is required" }, 400)
@@ -54,15 +55,23 @@ export const getComments = async (c: Context<{ Bindings: Bindings }>) => {
       whereParts.length > 0
         ? `status = "approved" AND (${whereParts.join(' OR ')})`
         : 'status = "approved"'
+    
+    let finalWhereClause = whereClause
+    const bindParams: unknown[] = [...equalSlugs, ...likePatterns]
+
+    if (siteId) {
+      finalWhereClause += ' AND site_id = ?'
+      bindParams.push(siteId)
+    }
+
     const query = `
       SELECT id, name, email, url, content_text as contentText,
              content_html as contentHtml, created, parent_id as parentId,
              post_slug as postSlug, post_url as postUrl, priority, COALESCE(likes, 0) as likes
       FROM Comment
-      WHERE ${whereClause}
+      WHERE ${finalWhereClause}
       ORDER BY priority DESC, created DESC
     `
-    const bindParams: unknown[] = [...equalSlugs, ...likePatterns]
     
     const [commentsResult, adminEmailRows] = await Promise.all([
       c.env.CWD_DB.prepare(query).bind(...bindParams).all(),

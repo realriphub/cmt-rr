@@ -50,6 +50,10 @@ export function createApiClient(config) {
 			params.set('avatar_prefix', config.avatarPrefix);
 		}
 
+		if (config.siteId) {
+			params.set('site_id', config.siteId);
+		}
+
 		const response = await fetch(`${baseUrl}/api/comments?${params}`);
 		if (!response.ok) {
 			throw new Error(`获取评论失败：${response.status} ${response.statusText}`);
@@ -82,7 +86,8 @@ export function createApiClient(config) {
 				url: data.url || undefined,
 				content: data.content,
 				parent_id: data.parentId,
-				adminToken: data.adminToken
+				adminToken: data.adminToken,
+				site_id: config.siteId
 			}),
 		});
 

@@ -29,6 +29,9 @@ export class CWDComments {
 	 */
 	constructor(config) {
 		this.config = { ...config };
+		if (config.siteId) {
+			this.config.siteId = config.siteId;
+		}
 		if (typeof window !== 'undefined') {
 			this.config.postSlug = window.location.pathname;
 		}
@@ -571,6 +574,9 @@ export class CWDComments {
 		const prevConfig = { ...this.config };
 
 		Object.assign(this.config, newConfig);
+		if (newConfig.siteId !== undefined) {
+			this.config.siteId = newConfig.siteId;
+		}
 		if (typeof window !== 'undefined') {
 			this.config.postSlug = window.location.pathname;
 		}
@@ -589,7 +595,8 @@ export class CWDComments {
 		const shouldReload =
 			this.config.apiBaseUrl !== prevConfig.apiBaseUrl ||
 			this.config.pageSize !== prevConfig.pageSize ||
-			this.config.postSlug !== prevConfig.postSlug;
+			this.config.postSlug !== prevConfig.postSlug ||
+			this.config.siteId !== prevConfig.siteId;
 
 		if (shouldReload) {
 			const api = createApiClient(this.config);

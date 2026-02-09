@@ -35,6 +35,7 @@ onMounted(async () => {
   const comments = new window.CWDComments({
     el: commentsRoot.value,
     apiBaseUrl,
+    siteId: 'cwd-doc',
     theme: getTheme(),
   });
 

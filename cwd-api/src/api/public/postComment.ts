@@ -24,6 +24,7 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
     return c.json({ message: '无效的请求体' }, 400);
   }
   const { post_slug, content: rawContent, name: rawName, email, url, post_title, post_url, adminToken } = data;
+  const site_id = data.site_id ? String(data.site_id).trim() : "";
   const parentId = (data as any).parent_id ?? (data as any).parentId ?? null;
   if (!post_slug || typeof post_slug !== 'string') {
     return c.json({ message: 'post_slug 必填' }, 400);
@@ -161,8 +162,8 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
       INSERT INTO Comment (
         created, post_slug, post_url, name, email, url, ip_address, 
         os, browser, device, ua, content_text, content_html, 
-        parent_id, status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        parent_id, status, site_id
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
       Date.now(),
       post_slug,
@@ -178,7 +179,8 @@ export const postComment = async (c: Context<{ Bindings: Bindings }>) => {
       contentText,
       contentHtml,
       parentId || null,
-      defaultStatus
+      defaultStatus,
+      site_id
     ).run();
 
     if (!result.success) throw new Error("Database insert failed");
