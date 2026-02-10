@@ -194,7 +194,7 @@
                   <select v-model="widgetLanguage" class="form-input">
                     <option value="auto">Auto (Browser Default)</option>
                     <option v-for="lang in languageOptions" :key="lang.value" :value="lang.value">
-                        {{ lang.label }} ({{ lang.value }})
+                        {{ lang.label }}
                     </option>
                   </select>
                   <div class="form-hint">
@@ -236,7 +236,7 @@
                   <label class="form-label">{{ t('settings.display.adminLanguage') }}</label>
                   <select v-model="adminLanguage" class="form-input">
                     <option v-for="lang in languageOptions" :key="lang.value" :value="lang.value">
-                        {{ lang.label }} ({{ lang.value }})
+                        {{ lang.label }}
                     </option>
                   </select>
                   <div class="form-hint">{{ t('settings.display.adminLanguageHint') }}</div>
