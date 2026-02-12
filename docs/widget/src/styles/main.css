@@ -434,7 +434,7 @@
   line-height: 1.6;
   color: var(--cwd-text, #24292f);
   word-wrap: break-word;
-  white-space: pre-wrap;
+  /* white-space: pre-wrap; */
   margin-top: 10px;
 }
 
