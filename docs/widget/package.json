@@ -1,14 +1,16 @@
 {
   "name": "cwd-widget",
-  "version": "0.1.4-beta",
+  "version": "0.1.4-rc-1",
   "description": "Server-free, extremely fast and secure, plug-and-play commenting system based on Cloudflare Workers and the Global Edge Network.",
   "type": "module",
   "author": "anghunk",
   "license": "Apache-2.0",
   "main": "./dist/cwd.umd.js",
   "module": "./dist/cwd.es.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/cwd.es.js",
       "require": "./dist/cwd.umd.js"
     }
