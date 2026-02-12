@@ -115,6 +115,22 @@
         "desc": "全システムデータのバックアップと復元（コメント+設定+統計）。",
         "export": "完全エクスポート",
         "import": "完全復元"
+      },
+      "s3": {
+        "title": "S3 バックアップ",
+        "desc": "S3互換ストレージ（AWS S3、Cloudflare R2、MinIOなど）を設定し、手動バックアップを実行します。",
+        "endpoint": "API エンドポイント",
+        "endpointHint": "例: https://[account_id].r2.cloudflarestorage.com",
+        "region": "リージョン",
+        "regionHint": "例: auto, us-east-1",
+        "bucket": "バケット",
+        "accessKey": "アクセスキー ID",
+        "secretKey": "シークレットアクセスキー",
+        "save": "設定を保存",
+        "saving": "保存中...",
+        "backup": "今すぐ S3 にバックアップ",
+        "backingUp": "バックアップ中...",
+        "success": "バックアップ成功！ファイル: {file}"
       }
     },
     "logs": {

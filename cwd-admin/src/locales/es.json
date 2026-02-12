@@ -115,6 +115,22 @@
         "desc": "Copia o restaura todo (Comentarios + Config + Stats).",
         "export": "Exportación Completa",
         "import": "Restauración Completa"
+      },
+      "s3": {
+        "title": "Copia de Seguridad S3",
+        "desc": "Configurar almacenamiento compatible con S3 (AWS S3, Cloudflare R2, MinIO, etc.) y activar copias de seguridad manuales.",
+        "endpoint": "Punto de Conexión API",
+        "endpointHint": "ej: https://[account_id].r2.cloudflarestorage.com",
+        "region": "Región",
+        "regionHint": "ej: auto, us-east-1",
+        "bucket": "Bucket",
+        "accessKey": "ID de Clave de Acceso",
+        "secretKey": "Clave de Acceso Secreta",
+        "save": "Guardar Config",
+        "saving": "Guardando...",
+        "backup": "Copiar a S3 Ahora",
+        "backingUp": "Copiando...",
+        "success": "¡Copia de seguridad exitosa! Archivo: {file}"
       }
     },
     "logs": {

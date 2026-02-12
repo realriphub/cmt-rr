@@ -115,6 +115,22 @@
         "desc": "Backup ou restauração de tudo (Comentários + Config + Stats).",
         "export": "Exportação Completa",
         "import": "Restauração Completa"
+      },
+      "s3": {
+        "title": "Backup S3",
+        "desc": "Configure armazenamento compatível com S3 (AWS S3, Cloudflare R2, MinIO, etc.) e acione backups manuais.",
+        "endpoint": "Endpoint da API",
+        "endpointHint": "ex: https://[account_id].r2.cloudflarestorage.com",
+        "region": "Região",
+        "regionHint": "ex: auto, us-east-1",
+        "bucket": "Bucket",
+        "accessKey": "ID da Chave de Acesso",
+        "secretKey": "Chave de Acesso Secreta",
+        "save": "Salvar Config",
+        "saving": "Salvando...",
+        "backup": "Fazer Backup para S3 Agora",
+        "backingUp": "Fazendo Backup...",
+        "success": "Backup bem-sucedido! Arquivo: {file}"
       }
     },
     "logs": {

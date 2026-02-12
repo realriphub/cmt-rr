@@ -115,6 +115,22 @@
         "desc": "Бэкап или восстановление всего (Комментарии + Конфиг + Статистика).",
         "export": "Полный Экспорт",
         "import": "Полное Восстановление"
+      },
+      "s3": {
+        "title": "S3 Бэкап",
+        "desc": "Настройте S3-совместимое хранилище (AWS S3, Cloudflare R2, MinIO и др.) и запускайте ручные резервные копии.",
+        "endpoint": "API Endpoint",
+        "endpointHint": "например: https://[account_id].r2.cloudflarestorage.com",
+        "region": "Регион",
+        "regionHint": "например: auto, us-east-1",
+        "bucket": "Bucket",
+        "accessKey": "Access Key ID",
+        "secretKey": "Secret Access Key",
+        "save": "Сохранить Конфиг",
+        "saving": "Сохранение...",
+        "backup": "Сделать бэкап в S3",
+        "backingUp": "Бэкап...",
+        "success": "Бэкап успешен! Файл: {file}"
       }
     },
     "logs": {

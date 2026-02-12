@@ -115,6 +115,22 @@
         "desc": "Cadangkan atau pulihkan semua data sistem (Komentar + Konfigurasi + Statistik).",
         "export": "Ekspor Lengkap",
         "import": "Pulihkan Lengkap"
+      },
+      "s3": {
+        "title": "Cadangan S3",
+        "desc": "Konfigurasikan penyimpanan yang kompatibel dengan S3 (AWS S3, Cloudflare R2, MinIO, dll.) dan picu cadangan manual.",
+        "endpoint": "Endpoint API",
+        "endpointHint": "contoh: https://[account_id].r2.cloudflarestorage.com",
+        "region": "Wilayah",
+        "regionHint": "contoh: auto, us-east-1",
+        "bucket": "Bucket",
+        "accessKey": "ID Kunci Akses",
+        "secretKey": "Kunci Akses Rahasia",
+        "save": "Simpan Konfigurasi",
+        "saving": "Menyimpan...",
+        "backup": "Cadangkan ke S3 Sekarang",
+        "backingUp": "Mencadangkan...",
+        "success": "Cadangan berhasil! File: {file}"
       }
     },
     "logs": {

@@ -115,6 +115,22 @@
         "desc": "Alles sichern oder wiederherstellen (Kommentare + Konfig + Stats).",
         "export": "Vollexport",
         "import": "Vollwiederherstellung"
+      },
+      "s3": {
+        "title": "S3 Backup",
+        "desc": "S3-kompatiblen Speicher (AWS S3, Cloudflare R2, MinIO usw.) konfigurieren und manuelle Backups auslösen.",
+        "endpoint": "API-Endpunkt",
+        "endpointHint": "z.B. https://[account_id].r2.cloudflarestorage.com",
+        "region": "Region",
+        "regionHint": "z.B. auto, us-east-1",
+        "bucket": "Bucket",
+        "accessKey": "Zugriffsschlüssel-ID",
+        "secretKey": "Geheimer Zugriffsschlüssel",
+        "save": "Konfig speichern",
+        "saving": "Speichert...",
+        "backup": "Jetzt zu S3 sichern",
+        "backingUp": "Sichere...",
+        "success": "Backup erfolgreich! Datei: {file}"
       }
     },
     "logs": {

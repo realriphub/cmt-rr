@@ -115,6 +115,22 @@
         "desc": "시스템 전체 데이터 백업 및 복원 (댓글 + 설정 + 통계).",
         "export": "전체 내보내기",
         "import": "전체 복원"
+      },
+      "s3": {
+        "title": "S3 백업",
+        "desc": "S3 호환 스토리지(AWS S3, Cloudflare R2, MinIO 등)를 구성하고 수동 백업을 실행합니다.",
+        "endpoint": "API 엔드포인트",
+        "endpointHint": "예: https://[account_id].r2.cloudflarestorage.com",
+        "region": "리전",
+        "regionHint": "예: auto, us-east-1",
+        "bucket": "버킷",
+        "accessKey": "액세스 키 ID",
+        "secretKey": "시크릿 액세스 키",
+        "save": "설정 저장",
+        "saving": "저장 중...",
+        "backup": "지금 S3에 백업",
+        "backingUp": "백업 중...",
+        "success": "백업 성공! 파일: {file}"
       }
     },
     "logs": {

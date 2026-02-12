@@ -115,6 +115,22 @@
         "desc": "Back-up of herstel van alle systeemgegevens (reacties + configuratie + statistieken).",
         "export": "Volledig exporteren",
         "import": "Volledig herstellen"
+      },
+      "s3": {
+        "title": "S3 Backup",
+        "desc": "Configureer S3-compatibele opslag (AWS S3, Cloudflare R2, MinIO, etc.) en start handmatige back-ups.",
+        "endpoint": "API-eindpunt",
+        "endpointHint": "bijv: https://[account_id].r2.cloudflarestorage.com",
+        "region": "Regio",
+        "regionHint": "bijv: auto, us-east-1",
+        "bucket": "Bucket",
+        "accessKey": "Toegangssleutel-ID",
+        "secretKey": "Geheime Toegangssleutel",
+        "save": "Configuratie opslaan",
+        "saving": "Opslaan...",
+        "backup": "Nu naar S3 back-uppen",
+        "backingUp": "Back-uppen...",
+        "success": "Back-up geslaagd! Bestand: {file}"
       }
     },
     "logs": {

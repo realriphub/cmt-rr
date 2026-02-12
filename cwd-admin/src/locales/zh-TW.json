@@ -115,6 +115,22 @@
         "desc": "一鍵備份或恢復系統所有數據（評論 + 配置 + 統計）。",
         "export": "全量導出",
         "import": "全量恢復"
+      },
+      "s3": {
+        "title": "S3 備份",
+        "desc": "配置 S3 兼容存儲（AWS S3, Cloudflare R2, MinIO 等），並支持手動觸發備份。",
+        "endpoint": "API 端點 (Endpoint)",
+        "endpointHint": "例如: https://[account_id].r2.cloudflarestorage.com",
+        "region": "區域 (Region)",
+        "regionHint": "例如: auto, us-east-1",
+        "bucket": "存儲桶 (Bucket)",
+        "accessKey": "Access Key ID",
+        "secretKey": "Secret Access Key",
+        "save": "保存配置",
+        "saving": "保存中...",
+        "backup": "立即備份到 S3",
+        "backingUp": "正在備份...",
+        "success": "備份成功！文件: {file}"
       }
     },
     "logs": {
