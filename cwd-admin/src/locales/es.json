@@ -130,7 +130,15 @@
         "saving": "Guardando...",
         "backup": "Copiar a S3 Ahora",
         "backingUp": "Copiando...",
-        "success": "¡Copia de seguridad exitosa! Archivo: {file}"
+        "success": "¡Copia de seguridad exitosa! Archivo: {file}",
+        "viewBackups": "Ver copias de seguridad",
+        "loadingBackups": "Cargando...",
+        "backupListTitle": "Lista de copias de seguridad S3",
+        "emptyBackupList": "No hay archivos de copia de seguridad",
+        "download": "Descargar",
+        "delete": "Eliminar",
+        "confirmDelete": "¿Estás seguro de que quieres eliminar la copia de seguridad {file}?",
+        "deleteSuccess": "Eliminado exitosamente"
       }
     },
     "logs": {

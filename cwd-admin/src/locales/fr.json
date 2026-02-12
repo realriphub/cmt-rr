@@ -130,7 +130,15 @@
         "saving": "Sauvegarde...",
         "backup": "Sauvegarder vers S3 Maintenant",
         "backingUp": "Sauvegarde en cours...",
-        "success": "Sauvegarde réussie ! Fichier: {file}"
+        "success": "Sauvegarde réussie ! Fichier: {file}",
+        "viewBackups": "Voir les sauvegardes",
+        "loadingBackups": "Chargement...",
+        "backupListTitle": "Liste des sauvegardes S3",
+        "emptyBackupList": "Aucun fichier de sauvegarde",
+        "download": "Télécharger",
+        "delete": "Supprimer",
+        "confirmDelete": "Êtes-vous sûr de vouloir supprimer la sauvegarde {file} ?",
+        "deleteSuccess": "Supprimé avec succès"
       }
     },
     "logs": {

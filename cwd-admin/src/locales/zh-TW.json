@@ -130,7 +130,15 @@
         "saving": "保存中...",
         "backup": "立即備份到 S3",
         "backingUp": "正在備份...",
-        "success": "備份成功！文件: {file}"
+        "success": "備份成功！文件: {file}",
+        "viewBackups": "查看備份",
+        "loadingBackups": "加載中...",
+        "backupListTitle": "S3 備份列表",
+        "emptyBackupList": "暫無備份文件",
+        "download": "下載",
+        "delete": "刪除",
+        "confirmDelete": "確定要刪除備份 {file} 嗎？",
+        "deleteSuccess": "刪除成功"
       }
     },
     "logs": {

@@ -130,7 +130,15 @@
         "saving": "Opslaan...",
         "backup": "Nu naar S3 back-uppen",
         "backingUp": "Back-uppen...",
-        "success": "Back-up geslaagd! Bestand: {file}"
+        "success": "Back-up geslaagd! Bestand: {file}",
+        "viewBackups": "Back-ups bekijken",
+        "loadingBackups": "Laden...",
+        "backupListTitle": "S3 Back-up lijst",
+        "emptyBackupList": "Geen back-up bestanden",
+        "download": "Downloaden",
+        "delete": "Verwijderen",
+        "confirmDelete": "Weet u zeker dat u back-up {file} wilt verwijderen?",
+        "deleteSuccess": "Succesvol verwijderd"
       }
     },
     "logs": {

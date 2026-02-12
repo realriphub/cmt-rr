@@ -408,3 +408,21 @@ export function saveS3Settings(data: S3SettingsResponse): Promise<{ message: str
 export function triggerS3Backup(): Promise<{ message: string; file: string }> {
 	return post<{ message: string; file: string }>('/admin/backup/s3', {});
 }
+
+export type S3BackupItem = {
+	key: string;
+	size: number;
+	lastModified: string;
+};
+
+export function fetchS3BackupList(): Promise<{ files: S3BackupItem[] }> {
+	return get<{ files: S3BackupItem[] }>('/admin/backup/s3/list');
+}
+
+export function deleteS3Backup(key: string): Promise<{ message: string }> {
+	return del<{ message: string }>(`/admin/backup/s3?key=${encodeURIComponent(key)}`);
+}
+
+export function downloadS3BackupUrl(key: string): string {
+	return `/admin/backup/s3/download?key=${encodeURIComponent(key)}`;
+}

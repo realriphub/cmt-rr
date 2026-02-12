@@ -130,7 +130,15 @@
         "saving": "Salvando...",
         "backup": "Fazer Backup para S3 Agora",
         "backingUp": "Fazendo Backup...",
-        "success": "Backup bem-sucedido! Arquivo: {file}"
+        "success": "Backup bem-sucedido! Arquivo: {file}",
+        "viewBackups": "Ver Backups",
+        "loadingBackups": "Carregando...",
+        "backupListTitle": "Lista de Backups S3",
+        "emptyBackupList": "Nenhum arquivo de backup",
+        "download": "Baixar",
+        "delete": "Excluir",
+        "confirmDelete": "Tem certeza de que deseja excluir o backup {file}?",
+        "deleteSuccess": "Excluído com sucesso"
       }
     },
     "logs": {

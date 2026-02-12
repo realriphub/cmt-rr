@@ -130,7 +130,15 @@
         "saving": "सहेजा जा रहा है...",
         "backup": "अभी S3 पर बैकअप करें",
         "backingUp": "बैकअप हो रहा है...",
-        "success": "बैकअप सफल! फ़ाइल: {file}"
+        "success": "बैकअप सफल! फ़ाइल: {file}",
+        "viewBackups": "बैकअप देखें",
+        "loadingBackups": "लोड हो रहा है...",
+        "backupListTitle": "S3 बैकअप सूची",
+        "emptyBackupList": "कोई बैकअप फ़ाइल नहीं",
+        "download": "डाउनलोड",
+        "delete": "हटाएं",
+        "confirmDelete": "क्या आप वाकई बैकअप {file} हटाना चाहते हैं?",
+        "deleteSuccess": "सफलतापूर्वक हटाया गया"
       }
     },
     "logs": {

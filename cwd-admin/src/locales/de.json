@@ -130,7 +130,15 @@
         "saving": "Speichert...",
         "backup": "Jetzt zu S3 sichern",
         "backingUp": "Sichere...",
-        "success": "Backup erfolgreich! Datei: {file}"
+        "success": "Backup erfolgreich! Datei: {file}",
+        "viewBackups": "Backups anzeigen",
+        "loadingBackups": "Laden...",
+        "backupListTitle": "S3 Backup-Liste",
+        "emptyBackupList": "Keine Backup-Dateien",
+        "download": "Herunterladen",
+        "delete": "Löschen",
+        "confirmDelete": "Sind Sie sicher, dass Sie das Backup {file} löschen möchten?",
+        "deleteSuccess": "Erfolgreich gelöscht"
       }
     },
     "logs": {

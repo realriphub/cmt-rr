@@ -130,7 +130,15 @@
         "saving": "Сохранение...",
         "backup": "Сделать бэкап в S3",
         "backingUp": "Бэкап...",
-        "success": "Бэкап успешен! Файл: {file}"
+        "success": "Бэкап успешен! Файл: {file}",
+        "viewBackups": "Просмотр бэкапов",
+        "loadingBackups": "Загрузка...",
+        "backupListTitle": "Список бэкапов S3",
+        "emptyBackupList": "Нет файлов бэкапов",
+        "download": "Скачать",
+        "delete": "Удалить",
+        "confirmDelete": "Вы уверены, что хотите удалить бэкап {file}?",
+        "deleteSuccess": "Успешно удалено"
       }
     },
     "logs": {

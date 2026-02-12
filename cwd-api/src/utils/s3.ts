@@ -8,6 +8,12 @@ export interface S3Config {
 	region?: string;
 }
 
+export interface S3Object {
+	key: string;
+	size: number;
+	lastModified: string;
+}
+
 export class S3Client {
 	private client: AwsClient;
 	private bucket: string;
@@ -48,5 +54,75 @@ export class S3Client {
 		}
 
 		return res;
+	}
+
+	async listObjects(prefix?: string): Promise<S3Object[]> {
+		let url = `${this.endpoint}/${this.bucket}?list-type=2`;
+		if (prefix) {
+			url += `&prefix=${encodeURIComponent(prefix)}`;
+		}
+
+		const res = await this.client.fetch(url, {
+			method: 'GET',
+		});
+
+		if (!res.ok) {
+			const text = await res.text();
+			throw new Error(`S3 List Failed: ${res.status} ${res.statusText} - ${text}`);
+		}
+
+		const xml = await res.text();
+		return this.parseListObjectsXml(xml);
+	}
+
+	async deleteObject(key: string): Promise<void> {
+		const url = `${this.endpoint}/${this.bucket}/${key}`;
+		const res = await this.client.fetch(url, {
+			method: 'DELETE',
+		});
+
+		if (!res.ok && res.status !== 204) {
+			const text = await res.text();
+			throw new Error(`S3 Delete Failed: ${res.status} ${res.statusText} - ${text}`);
+		}
+	}
+
+	async getObject(key: string): Promise<Response> {
+		const url = `${this.endpoint}/${this.bucket}/${key}`;
+		const res = await this.client.fetch(url, {
+			method: 'GET',
+		});
+
+		if (!res.ok) {
+			const text = await res.text();
+			throw new Error(`S3 Get Failed: ${res.status} ${res.statusText} - ${text}`);
+		}
+
+		return res;
+	}
+
+	private parseListObjectsXml(xml: string): S3Object[] {
+		const objects: S3Object[] = [];
+		const contentsRegex = /<Contents>([\s\S]*?)<\/Contents>/g;
+		let match;
+
+		while ((match = contentsRegex.exec(xml)) !== null) {
+			const content = match[1];
+			const keyMatch = content.match(/<Key>([^<]*)<\/Key>/);
+			const sizeMatch = content.match(/<Size>(\d+)<\/Size>/);
+			const lastModifiedMatch = content.match(/<LastModified>([^<]*)<\/LastModified>/);
+
+			if (keyMatch && sizeMatch && lastModifiedMatch) {
+				objects.push({
+					key: keyMatch[1],
+					size: parseInt(sizeMatch[1], 10),
+					lastModified: lastModifiedMatch[1],
+				});
+			}
+		}
+
+		return objects.sort((a, b) =>
+			new Date(b.lastModified).getTime() - new Date(a.lastModified).getTime()
+		);
 	}
 }

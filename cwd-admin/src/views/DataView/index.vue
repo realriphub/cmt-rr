@@ -162,6 +162,13 @@
             s3BackingUp ? t("data.sections.s3.backingUp") : t("data.sections.s3.backup")
           }}
         </button>
+        <button
+          class="card-button secondary"
+          :disabled="false"
+          @click="handleViewS3Backups"
+        >
+          {{ t("data.sections.s3.viewBackups") }}
+        </button>
       </div>
     </div>
 
@@ -213,6 +220,12 @@
         </div>
       </div>
     </div>
+
+    <!-- S3 备份列表弹窗 -->
+    <S3BackupModal
+      :visible="showS3BackupModal"
+      @close="handleS3BackupModalClose"
+    />
   </div>
 </template>
 
@@ -231,8 +244,9 @@ import {
   fetchS3Settings,
   saveS3Settings,
   triggerS3Backup,
-  type S3SettingsResponse,
+  S3SettingsResponse,
 } from "../../api/admin";
+import S3BackupModal from "./components/S3BackupModal.vue";
 import { useSite } from "../../composables/useSite";
 
 const { t } = useI18n();
@@ -264,6 +278,7 @@ const s3Config = ref<S3SettingsResponse>({
 });
 const s3Saving = ref(false);
 const s3BackingUp = ref(false);
+const showS3BackupModal = ref(false);
 
 async function loadS3Config() {
   try {
@@ -296,6 +311,14 @@ async function handleS3Backup() {
   } finally {
     s3BackingUp.value = false;
   }
+}
+
+function handleViewS3Backups() {
+  showS3BackupModal.value = true;
+}
+
+function handleS3BackupModalClose() {
+  showS3BackupModal.value = false;
 }
 
 onMounted(() => {
@@ -552,4 +575,93 @@ function joinUrl(prefix: string, path: string): string {
   margin-bottom: 4px;
   color: var(--text-primary);
 }
+
+/* S3 备份弹窗样式 */
+.s3-backup-modal {
+  max-width: 600px;
+  width: 90%;
+  max-height: 70vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 5px;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.modal-content {
+  overflow-y: auto;
+  flex: 1;
+}
+
+.empty-backup-list {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+}
+
+.backup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.backup-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  gap: 12px;
+}
+
+.backup-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.backup-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 4px;
+}
+
+.backup-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
 </style>

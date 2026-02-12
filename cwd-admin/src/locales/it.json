@@ -130,7 +130,15 @@
         "saving": "Salvataggio...",
         "backup": "Backup su S3 Ora",
         "backingUp": "Backup in corso...",
-        "success": "Backup riuscito! File: {file}"
+        "success": "Backup riuscito! File: {file}",
+        "viewBackups": "Visualizza Backup",
+        "loadingBackups": "Caricamento...",
+        "backupListTitle": "Lista Backup S3",
+        "emptyBackupList": "Nessun file di backup",
+        "download": "Scarica",
+        "delete": "Elimina",
+        "confirmDelete": "Sei sicuro di voler eliminare il backup {file}?",
+        "deleteSuccess": "Eliminato con successo"
       }
     },
     "logs": {

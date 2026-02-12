@@ -130,7 +130,15 @@
         "saving": "保存中...",
         "backup": "今すぐ S3 にバックアップ",
         "backingUp": "バックアップ中...",
-        "success": "バックアップ成功！ファイル: {file}"
+        "success": "バックアップ成功！ファイル: {file}",
+        "viewBackups": "バックアップを表示",
+        "loadingBackups": "読み込み中...",
+        "backupListTitle": "S3 バックアップ一覧",
+        "emptyBackupList": "バックアップファイルがありません",
+        "download": "ダウンロード",
+        "delete": "削除",
+        "confirmDelete": "バックアップ {file} を削除してもよろしいですか？",
+        "deleteSuccess": "削除しました"
       }
     },
     "logs": {

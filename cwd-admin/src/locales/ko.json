@@ -130,7 +130,15 @@
         "saving": "저장 중...",
         "backup": "지금 S3에 백업",
         "backingUp": "백업 중...",
-        "success": "백업 성공! 파일: {file}"
+        "success": "백업 성공! 파일: {file}",
+        "viewBackups": "백업 보기",
+        "loadingBackups": "로딩 중...",
+        "backupListTitle": "S3 백업 목록",
+        "emptyBackupList": "백업 파일 없음",
+        "download": "다운로드",
+        "delete": "삭제",
+        "confirmDelete": "백업 {file}을(를) 삭제하시겠습니까?",
+        "deleteSuccess": "삭제 성공"
       }
     },
     "logs": {

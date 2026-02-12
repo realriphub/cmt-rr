@@ -130,7 +130,15 @@
         "saving": "Saving...",
         "backup": "Backup to S3 Now",
         "backingUp": "Backing up...",
-        "success": "Backup successful! File: {file}"
+        "success": "Backup successful! File: {file}",
+        "viewBackups": "View Backups",
+        "loadingBackups": "Loading...",
+        "backupListTitle": "S3 Backup List",
+        "emptyBackupList": "No backup files",
+        "download": "Download",
+        "delete": "Delete",
+        "confirmDelete": "Are you sure you want to delete backup {file}?",
+        "deleteSuccess": "Deleted successfully"
       }
     },
     "logs": {

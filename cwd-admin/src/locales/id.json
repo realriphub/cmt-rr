@@ -130,7 +130,15 @@
         "saving": "Menyimpan...",
         "backup": "Cadangkan ke S3 Sekarang",
         "backingUp": "Mencadangkan...",
-        "success": "Cadangan berhasil! File: {file}"
+        "success": "Cadangan berhasil! File: {file}",
+        "viewBackups": "Lihat Cadangan",
+        "loadingBackups": "Memuat...",
+        "backupListTitle": "Daftar Cadangan S3",
+        "emptyBackupList": "Tidak ada file cadangan",
+        "download": "Unduh",
+        "delete": "Hapus",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus cadangan {file}?",
+        "deleteSuccess": "Berhasil dihapus"
       }
     },
     "logs": {
