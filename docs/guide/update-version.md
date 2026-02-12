@@ -35,6 +35,4 @@ npm run build
 
 ### 评论端
 
-如果使用官方评论端 js `https://cwd.js.org/cwd.js`，不需要更新。
-
-如果你想自行托管，请使用打包命令，对仓库 `/docs/widget` 文件夹进行构建，然后把 `dist` 文件夹中的最新的 `cwd.js` 文件上传到你托管的地方。
+更新 api 时同步修改引入文件的版本号，源码文件 `/docs/widget`.
