@@ -91,10 +91,10 @@
           </div>
           <div class="table-cell table-cell-path">
             <a
-              :href="item.postSlug"
+              :href="item.postUrl ?? undefined"
               target="_blank"
               class="cell-path"
-              :title="item.postSlug"
+              :title="item.postUrl ?? undefined"
             >
               {{ item.postUrl || item.postSlug }}
             </a>
@@ -502,7 +502,7 @@ async function submitEdit() {
       name: trimmedName,
       email: trimmedEmail,
       url: trimmedUrl || null,
-      postUrl: trimmedPostUrl || null,
+      postUrl: trimmedPostUrl,
       postSlug: newPostSlug,
       contentText: trimmedContent,
       status: current.status,
@@ -515,7 +515,7 @@ async function submitEdit() {
         email: trimmedEmail,
         url: trimmedUrl || null,
         postSlug: newPostSlug,
-        postUrl: trimmedPostUrl || null,
+        postUrl: trimmedPostUrl,
         contentText: trimmedContent,
         status: current.status,
         priority: priorityValue,
