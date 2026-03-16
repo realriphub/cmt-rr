@@ -212,6 +212,24 @@ export function createApiClient(config) {
         return response.json();
     }
 
+    async function getPagePv() {
+        const params = new URLSearchParams({
+            post_slug: config.postUrl || config.postSlug
+        });
+
+        if (config.siteId) {
+            params.set('siteId', config.siteId);
+        }
+
+        const response = await fetch(`${baseUrl}/api/analytics/pv?${params}`);
+
+        if (!response.ok) {
+            return { pv: 0, postSlug: config.postSlug };
+        }
+
+        return response.json();
+    }
+
 		return {
 		fetchComments,
 		submitComment,
@@ -219,6 +237,7 @@ export function createApiClient(config) {
         trackVisit,
         getLikeStatus,
         likePage,
-        likeComment
+        likeComment,
+        getPagePv
 	};
 }

@@ -59,6 +59,7 @@ export class CWDComments {
 		};
 		this._likeButtonEl = null;
 		this._likeCountEl = null;
+		this._pvElement = null;
 
 		this._mounted = false;
 		
@@ -254,6 +255,10 @@ export class CWDComments {
 
 			if (this.api && typeof this.api.trackVisit === 'function') {
 				this.api.trackVisit();
+			}
+
+			if (this.api && typeof this.api.getPagePv === 'function') {
+				this._fetchAndFillPv();
 			}
 
 			if (this.api && typeof this.api.getLikeStatus === 'function') {
@@ -819,5 +824,53 @@ export class CWDComments {
 	 */
 	getConfig() {
 		return { ...this.config };
+	}
+
+	/**
+	 * 获取并填充页面访问量
+	 * @private
+	 */
+	async _fetchAndFillPv() {
+		try {
+			// 查找固定 ID 的容器
+			const container = typeof document !== 'undefined'
+				? document.querySelector('#cwd-page-pv')
+				: null;
+
+			if (!container) {
+				return;  // 容器不存在则静默跳过
+			}
+
+			this._pvElement = container;
+			const result = await this.api.getPagePv();
+			const pv = result && typeof result.pv === 'number' ? result.pv : 0;
+			this._updatePvDisplay(pv);
+		} catch (e) {
+			// 静默失败，不影响主功能
+		}
+	}
+
+	/**
+	 * 更新 PV 显示
+	 * @private
+	 */
+	_updatePvDisplay(pv) {
+		if (!this._pvElement) return;
+		this._pvElement.textContent = this._formatPvNumber(pv);
+		this._pvElement.setAttribute('data-cwd-pv', String(pv));
+	}
+
+	/**
+	 * 格式化 PV 数字
+	 * @private
+	 */
+	_formatPvNumber(num) {
+		if (num >= 1000000) {
+			return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+		}
+		if (num >= 1000) {
+			return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+		}
+		return String(num);
 	}
 }
