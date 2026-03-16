@@ -122,16 +122,20 @@ export function createApiClient(config) {
 
     async function trackVisit() {
         try {
+            const body = {
+                postSlug: config.postUrl || config.postSlug,
+                postTitle: config.postTitle,
+                postUrl: config.postUrl
+            };
+            if (config.siteId) {
+                body.siteId = config.siteId;
+            }
             await fetch(`${baseUrl}/api/analytics/visit`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({
-                    postSlug: config.postUrl || config.postSlug,
-                    postTitle: config.postTitle,
-                    postUrl: config.postUrl
-                })
+                body: JSON.stringify(body)
             });
         } catch (e) {
         }
